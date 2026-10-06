@@ -27,6 +27,13 @@ Any static host. Cloudflare Pages is the easiest fit: build command `npm run bui
 `public/_redirects` and `public/_headers` are already in Cloudflare/Netlify format.
 **Before DNS cutover:** confirm every old URL in the sitemap either exists or is in `_redirects`.
 
+## Brand fidelity (taken from the old site, not invented)
+
+- **Typeface:** Modesto (Poster, Text, Condensed, Open Inline Fill) loaded from the festival's own Adobe Fonts kit `wgs2amx` (`<link>` in `src/layouts/Base.astro`). It must stay tied to their Adobe subscription; if it lapses, text falls back to Georgia.
+- **Palette:** blue `#2382A6`, orange `#FA965E`, cream `#F2E1D1`, navy `#1F1E3D`, red-pink `#D1445B`, gold `#FFB85D` (tokens in `global.css`). Darker variants (`--coral-ink`, `--teal-deep`) exist only so text passes WCAG AA.
+- **Marks:** the wordmark lettering and centred sun/moon mark in the header; the engraved sun/moon, moon-face and rising half-sun artwork as ghosted watermarks (`Watermark.astro`, rebuilt as true line-art masks in `src/assets/brand/wm-*.svg`); the flower of life behind the seven values; the horizontal and vertical flourish dividers. All originals were pulled from the old site's uploads.
+- **Hero film:** the old site's two YouTube background videos. Desktop is the 2025 Aftermovie (`6lcjCU5aSzc`), mobile is the vertical Reel (`OcV4jINr2EE`). Change the IDs on `data-hero-video` in `src/pages/index.astro`. It is muted, loads after the page, pauses off-screen, stays still under reduced-motion / calm mode / data-saver, and has a visible Pause control.
+
 ## Things that need a human decision (not guessed)
 
 1. **Ticket prices and availability** were read from Dandelion on 6 Oct 2026 (`TICKETS`, `ticketsCheckedOn` in `site.ts`). Re-check before launch. Prices are not live-synced.
@@ -51,9 +58,9 @@ Any static host. Cloudflare Pages is the easiest fit: build command `npm run bui
 - No horizontal overflow at 375px on any page
 - 0 broken internal links; unique titles; all titles ≤ 62 and descriptions 70–165 chars; one H1 per page
 - JSON-LD: Organization (all), Festival + Offers (home), FAQPage (tickets, FAQs), Article (journal)
-- Images auto-converted to AVIF/WebP with responsive sizes. Fonts self-hosted and preloaded. About 2 KB of shared JavaScript.
+- Images auto-converted to AVIF/WebP with responsive sizes. Fonts come from the client's Adobe Fonts kit. About 2 KB of shared JavaScript plus the hero-film loader.
 - Not run: Lighthouse (no Chrome binary available in the build environment). Run it once deployed.
 
 ## Features beyond a standard festival site
 
-Rising-sun hero · scroll-lit manifesto · live countdown · ticket calculator with payment-plan estimate · stage explorer (keyboard-accessible tabs) · interactive values wheel · searchable FAQ with topic filters · packing checklist saved on-device · gallery with filters + lightbox (swipe/keys) · 2026 line-up archive · journal (6 posts migrated verbatim) · "calm mode" motion toggle · full legacy redirect map.
+Hero background film · scroll-lit manifesto · live countdown · ticket calculator with payment-plan estimate · stage explorer (keyboard-accessible tabs) · interactive values wheel · searchable FAQ with topic filters · packing checklist saved on-device · gallery with filters + lightbox (swipe/keys) · 2026 line-up archive · journal (6 posts migrated verbatim) · "calm mode" motion toggle · full legacy redirect map.

@@ -4,8 +4,6 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Newsletter from '../components/Newsletter.astro';
 import { SITE } from '../data/site';
-import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2?url';
-import hankenLatin from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -52,11 +50,13 @@ const graph = [org, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {(noindex || import.meta.env.PUBLIC_PREVIEW) && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#100f24" />
+    <meta name="theme-color" content="#14132e" />
     <meta name="color-scheme" content="light dark" />
 
-    <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={hankenLatin} as="font" type="font/woff2" crossorigin />
+    <!-- The festival's own licensed Adobe Fonts kit (Modesto). Keep this linked to their Adobe account. -->
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+    <link rel="stylesheet" href="https://use.typekit.net/wgs2amx.css" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />

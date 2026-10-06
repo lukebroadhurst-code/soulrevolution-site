@@ -1,0 +1,18 @@
+---
+// The festival's ghosted engraved marks, painted with CSS masks so any colour works.
+//   moon    sleeping moon-face     sunmoon  sun/moon pair     rising  half-sun rising with a face
+import moon from '../assets/brand/wm-moon.svg?url';
+import sunmoon from '../assets/brand/wm-sunmoon.svg?url';
+import rising from '../assets/brand/wm-rising.svg?url';
+import flower from '../assets/brand/flower.svg?url';
+interface Props { kind: 'moon' | 'sunmoon' | 'rising' | 'flower'; class?: string; pos?: string; size?: string; opacity?: number; tone?: string }
+const { kind, class: cls = '', pos = 'center', size = '70rem', opacity = 0.08, tone } = Astro.props;
+const url = { moon, sunmoon, rising, flower }[kind];
+const style = `--wm:url('${url.replace(/'/g, '%27')}');--wm-pos:${pos};--wm-size:${size};--wm-o:${opacity};${tone ? `--wm-c:${tone};` : ''}`;
+---
+<div class:list={['wm', cls]} style={style} aria-hidden="true"></div>
+<style>
+  .wm { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    background: var(--wm-c, currentColor); opacity: var(--wm-o);
+    -webkit-mask: var(--wm) var(--wm-pos) / var(--wm-size) auto no-repeat; mask: var(--wm) var(--wm-pos) / var(--wm-size) auto no-repeat; }
+</style>

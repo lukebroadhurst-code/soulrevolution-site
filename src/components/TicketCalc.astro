@@ -56,14 +56,14 @@ const fmt = (n: number) => (n === 0 ? 'Free' : `£${n}`);
   .calc { display: grid; gap: 2rem; align-items: start; }
   @media (min-width: 960px) { .calc { grid-template-columns: 1.5fr 1fr; gap: 3rem; } }
   fieldset { border: 0; padding: 0; margin: 0 0 2rem; }
-  legend { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem; font-variation-settings: 'opsz' 48, 'SOFT' 50; }
+  legend { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem; }
   .tiers { display: grid; gap: 0.8rem; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
   .tier-card { position: relative; display: grid; gap: 0.25rem; padding: 1.2rem 1.2rem 1.1rem; border-radius: 1.1rem; background: #fff; cursor: pointer; border: 2px solid transparent; transition: .3s var(--ease); box-shadow: 0 1px 0 rgba(31,30,61,.06); font-weight: 400; }
   .tier-card input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
   .tier-card:has(input:checked) { border-color: var(--coral); transform: translateY(-3px); box-shadow: 0 18px 36px -18px rgba(242,100,74,.6); }
   .tier-card:has(input:focus-visible) { outline: 3px solid var(--sun); outline-offset: 3px; }
   .tc-name { font-weight: 700; }
-  .tc-price { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; font-variation-settings: 'opsz' 96, 'SOFT' 60; }
+  .tc-price { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; }
   .tc-note { font-size: 0.8rem; color: var(--muted); }
   .tier-card .pill { justify-self: start; }
 
@@ -83,7 +83,7 @@ const fmt = (n: number) => (n === 0 ? 'Free' : `£${n}`);
   dl :global(div) { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,.2); padding-bottom: 0.5rem; }
   dl :global(dt) { opacity: .85; font-family: var(--font-body); font-size: inherit; margin: 0; } dl :global(dd) { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--paper); }
   .total { display: flex; justify-content: space-between; align-items: baseline; }
-  .total b { font-family: var(--font-display); font-size: 3rem; line-height: 1; color: var(--sun); font-variant-numeric: tabular-nums; font-variation-settings: 'opsz' 96, 'SOFT' 60; }
+  .total b { font-family: var(--font-display); font-size: 3rem; line-height: 1; color: var(--sun); font-variant-numeric: tabular-nums; }
   .plan-label { font-size: .78rem; text-transform: uppercase; letter-spacing: .16em; color: var(--glow); }
   select { border-radius: 999px; background: rgba(255,255,255,.08); color: inherit; }
   select option { color: var(--ink); }

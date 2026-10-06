@@ -1,5 +1,6 @@
 ---
-import Sun from './Sun.astro';
+import Watermark from './Watermark.astro';
+import Divider from './Divider.astro';
 import Photo from './Photo.astro';
 import type { ImageMetadata } from 'astro';
 interface Props { eyebrow?: string; title: string; lede?: string; image?: ImageMetadata; alt?: string; position?: string; tone?: 'night' | 'ink' | 'teal' }
@@ -11,11 +12,12 @@ const { eyebrow, title, lede, image, alt = '', position = 'center', tone = 'nigh
       <Photo src={image} alt={alt} loading="eager" fetchpriority="high" sizes="100vw" position={position} />
     </div>
   )}
-  <div class="page-hero-sun" aria-hidden="true"><Sun /></div>
+  <Watermark kind="sunmoon" pos="right -8rem center" size="min(64vw, 52rem)" opacity={0.13} tone="var(--paper)" />
   <div class="wrap rel">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1 class="h1">{title}</h1>
     {lede && <p class="lede">{lede}</p>}
+    <Divider class="left" />
     <slot />
   </div>
 </section>

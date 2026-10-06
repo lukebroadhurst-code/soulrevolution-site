@@ -1,0 +1,11 @@
+---
+import Brand from './Brand.astro';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<div class:list={['flourish', cls]} aria-hidden="true"><Brand kind="divider" /></div>
+<style>
+  .flourish { width: min(100%, 26rem); margin: 1.4rem auto; color: var(--clay); opacity: .9; }
+  :global(.on-night) .flourish, :global(.on-ink) .flourish, :global(.on-teal) .flourish { color: var(--glow); opacity: .75; }
+  :global(.left) > .flourish { margin-left: 0; }
+</style>

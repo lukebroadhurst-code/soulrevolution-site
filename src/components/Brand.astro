@@ -1,0 +1,20 @@
+---
+// Inline, recolourable versions of the festival's own brand artwork.
+// `kind` picks the graphic; colour follows CSS `color` (currentColor).
+import wordmark from '../assets/brand/wordmark.svg?raw';
+import divider from '../assets/brand/divider.svg?raw';
+import vA from '../assets/brand/vdivider-a.svg?raw';
+import vB from '../assets/brand/vdivider-b.svg?raw';
+import mark from '../assets/brand/mark.svg?raw';
+interface Props { kind: 'wordmark' | 'divider' | 'vdivider-a' | 'vdivider-b' | 'mark'; class?: string; label?: string }
+const { kind, class: cls = '', label } = Astro.props;
+const raw = { wordmark, divider, 'vdivider-a': vA, 'vdivider-b': vB, mark }[kind];
+// strip fixed size & ids that would collide when the same graphic appears twice
+const svg = raw.replace(/<svg /, `<svg ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true" focusable="false"'} `)
+  .replace(/\sid="[^"]*"/g, '').replace(/\sdata-name="[^"]*"/g, '');
+---
+<span class:list={['brand-art', `brand-${kind}`, cls]} set:html={svg} />
+<style>
+  .brand-art { display: inline-block; line-height: 0; }
+  .brand-art :global(svg) { width: 100%; height: auto; display: block; }
+</style>

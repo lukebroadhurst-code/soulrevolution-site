@@ -2,33 +2,35 @@
    Night → dawn → day. Palette lifted from the sun/moon mark:
    deep indigo ink, coral-orange sun, teal moon, warm paper.
 */
-@import '@fontsource-variable/fraunces/full.css';
-@import '@fontsource-variable/hanken-grotesk';
 
 :root {
-  --night: #100f24;
-  --ink: #1f1e3d;
+  /* Brand palette, taken from the festival's own site kit */
+  --night: #14132e;
+  --ink: #1f1e3d;         /* brand navy, also the text colour */
   --dusk: #34285a;
   --plum: #5a2f62;
-  --coral: #f2644a;
-  --coral-ink: #b33320; /* coral for TEXT on light backgrounds (AA) */
-  --sun: #ffb347;
-  --glow: #ffd58a;
-  --teal: #1f9aa3;
-  --teal-deep: #0f6c78;
-  --paper: #fbf3e6;
-  --sand: #f2e2c9;
-  --clay: #d9b99a;
+  --coral: #fa965e;       /* brand orange: CTAs, accents */
+  --coral-ink: #a22d44;   /* brand red-pink darkened for TEXT on light backgrounds (AA) */
+  --sun: #ffb85d;         /* brand gold */
+  --glow: #ffd9a8;
+  --teal: #2382a6;        /* brand blue */
+  --teal-deep: #1b6a88;   /* brand blue darkened for text-on-colour (AA) */
+  --aqua: #36baba;
+  --paper: #f8eee2;
+  --sand: #f2e1d1;       /* brand cream */
+  --clay: #aa9680;        /* flourish brown */
   --muted: #5d5a78;
 
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
-  --font-body: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, sans-serif;
+  --font-display: 'modesto-poster', 'Modesto Poster', Georgia, 'Times New Roman', serif;
+  --font-inline: 'modesto-open-inline-fill', 'modesto-poster', Georgia, serif;
+  --font-body: 'modesto-text', 'Modesto Text', Georgia, 'Times New Roman', serif;
+  --font-cond: 'modesto-condensed', 'modesto-text', Georgia, serif;
 
   --gutter: clamp(1.25rem, 4vw, 3rem);
   --max: 76rem;
   --radius: 1.25rem;
   --ease: cubic-bezier(0.22, 0.8, 0.2, 1);
-  --header-h: 4.5rem;
+  --header-h: 4.75rem;
 }
 
 *,
@@ -49,8 +51,8 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: clamp(1.02rem, 0.98rem + 0.2vw, 1.15rem);
-  line-height: 1.65;
+  font-size: clamp(1.08rem, 1rem + 0.25vw, 1.22rem);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -60,7 +62,7 @@ img, svg, video { max-width: 100%; display: block; }
 img { height: auto; }
 a { color: inherit; text-decoration-thickness: 0.08em; text-underline-offset: 0.2em; }
 p { margin: 0 0 1.1em; text-wrap: pretty; }
-h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; line-height: 1.04; text-wrap: balance; }
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 400; line-height: 1.08; text-wrap: balance; letter-spacing: .005em; }
 ul, ol { padding-left: 1.2em; }
 
 ::selection { background: var(--coral); color: #fff; }
@@ -97,30 +99,26 @@ ul, ol { padding-left: 1.2em; }
 /* ───── Type ───── */
 .display {
   font-size: clamp(2.8rem, 1.2rem + 7vw, 7.6rem);
-  font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
-  letter-spacing: -0.025em;
-  font-weight: 650;
+  letter-spacing: 0;
+  font-weight: 400;
 }
 .h1 {
   font-size: clamp(2.6rem, 1.4rem + 5vw, 5.8rem);
-  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
   letter-spacing: -0.02em;
 }
 .h2 {
   font-size: clamp(2.1rem, 1.3rem + 3.2vw, 4.2rem);
-  font-variation-settings: 'opsz' 96, 'SOFT' 40, 'WONK' 1;
   letter-spacing: -0.015em;
 }
 .h3 {
   font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem);
-  font-variation-settings: 'opsz' 48, 'SOFT' 30;
   line-height: 1.12;
 }
 .lede {
   font-size: clamp(1.2rem, 1rem + 0.9vw, 1.65rem);
   line-height: 1.45;
-  font-family: var(--font-display);
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
+  font-family: var(--font-body);
+  font-style: italic;
   font-weight: 400;
   max-width: 38ch;
 }
@@ -136,7 +134,7 @@ ul, ol { padding-left: 1.2em; }
 .muted { color: var(--muted); }
 .on-night .muted, .on-ink .muted { color: #b9b5d6; }
 .prose p, .prose li { max-width: 62ch; }
-.prose h2 { font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.5rem); margin: 2.2em 0 0.55em; font-variation-settings: 'opsz' 72, 'SOFT' 40; }
+.prose h2 { font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.5rem); margin: 2.2em 0 0.55em; }
 .prose h3 { font-size: 1.35rem; margin: 1.8em 0 0.4em; }
 .prose a:not(.btn) { color: var(--coral-ink); font-weight: 600; }
 .on-night .prose a:not(.btn), .on-ink .prose a:not(.btn) { color: var(--sun); }
@@ -145,7 +143,6 @@ ul, ol { padding-left: 1.2em; }
 .prose blockquote {
   margin: 2em 0; padding-left: 1.4rem; border-left: 4px solid var(--coral);
   font-family: var(--font-display); font-size: 1.45rem; line-height: 1.35;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
 }
 
 /* ───── Buttons ───── */
@@ -224,9 +221,11 @@ input::placeholder { color: color-mix(in srgb, currentColor 55%, transparent); }
 .page-hero { padding-top: calc(var(--header-h) + clamp(3rem, 8vw, 7rem)); padding-bottom: clamp(3rem, 7vw, 6rem); position: relative; overflow: clip; }
 .page-hero .h1 { max-width: 14ch; }
 .page-hero .lede { margin-top: 1.5rem; }
-.page-hero-sun { position: absolute; right: -8%; top: 50%; width: min(52vw, 40rem); aspect-ratio: 1; transform: translateY(-50%); opacity: 0.9; pointer-events: none; }
-@media (max-width: 760px) { .page-hero-sun { opacity: 0.35; right: -35%; } }
 
 .h1 + p, .h2 + p, .h3 + p, .h2 + .lede { margin-top: 1rem; }
 .eyebrow { margin-bottom: 1rem; }
 .eyebrow + .h2, .eyebrow + .h1 { margin-top: 0; }
+
+/* sections that carry a ghosted brand mark */
+.has-wm { position: relative; overflow: clip; isolation: isolate; }
+.has-wm > .wrap, .has-wm > .wrap-narrow { position: relative; z-index: 1; }

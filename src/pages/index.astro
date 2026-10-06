@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Photo from '../components/Photo.astro';
-import Sun from '../components/Sun.astro';
+import Watermark from '../components/Watermark.astro';
+import Divider from '../components/Divider.astro';
+import Brand from '../components/Brand.astro';
 import Countdown from '../components/Countdown.astro';
 import Marquee from '../components/Marquee.astro';
 import { SITE, TICKETS, STAGES, FACTS, OFFERINGS } from '../data/site';
@@ -52,14 +54,18 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
     <div class="hero-bg" aria-hidden="true">
       <Photo src={photos.fireCircle} alt="" loading="eager" fetchpriority="high" sizes="100vw" position="50% 60%" />
     </div>
+    <div class="hero-video" aria-hidden="true" data-hero-video data-desktop="6lcjCU5aSzc" data-mobile="OcV4jINr2EE"></div>
     <div class="sky" aria-hidden="true"></div>
-    <div class="hero-sun" aria-hidden="true" data-sun><Sun /></div>
+    <Watermark kind="rising" class="hero-rise" pos="right 4vw bottom 3.6rem" size="min(50vw, 46rem)" opacity={0.6} tone="linear-gradient(180deg, #ffd9a8, #fa965e 60%, #d1445b)" />
+    <button class="vid-toggle" type="button" data-video-toggle aria-pressed="false" hidden>
+      <span class="ic" aria-hidden="true"></span><span class="lbl">Pause film</span>
+    </button>
 
     <div class="wrap hero-copy">
       <p class="eyebrow hero-in" style="--d:0">{SITE.theme} · {SITE.dateShort}</p>
       <h1 class="display">
         <span class="hero-in" style="--d:1">The&nbsp;revolution</span>
-        <span class="hero-in" style="--d:2">starts&nbsp;<em>within.</em></span>
+        <span class="hero-in" style="--d:2">starts <em>within</em></span>
       </h1>
       <p class="lede hero-in" style="--d:3">
         Five days of world music, ceremony, healing and joy on 1,000 acres of English parkland. Sober, safe, family-friendly, and unlike anything you have done before.
@@ -82,7 +88,8 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   </section>
 
   <!-- ═════════ MANIFESTO ═════════ -->
-  <section class="section manifesto on-ink grain" aria-labelledby="manifesto-h">
+  <section class="section manifesto on-ink grain has-wm" aria-labelledby="manifesto-h">
+    <Watermark kind="moon" pos="center bottom -2rem" size="min(110vw, 64rem)" opacity={0.07} tone="var(--paper)" />
     <div class="wrap-narrow">
       <p class="eyebrow">Why we gather</p>
       <h2 class="sr-only" id="manifesto-h">Our manifesto</h2>
@@ -142,7 +149,8 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   </section>
 
   <!-- ═════════ STAGE EXPLORER ═════════ -->
-  <section class="section stages on-night grain" aria-labelledby="stages-h">
+  <section class="section stages on-night grain has-wm" aria-labelledby="stages-h">
+    <Watermark kind="sunmoon" pos="right -10rem top 4rem" size="min(90vw, 56rem)" opacity={0.07} tone="var(--paper)" />
     <div class="wrap">
       <p class="eyebrow">Explore the village</p>
       <h2 class="h2" id="stages-h">Twelve-plus stages and spaces.<br />One beating heart.</h2>
@@ -190,7 +198,8 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   </section>
 
   <!-- ═════════ TICKETS ═════════ -->
-  <section class="section tix on-sand" aria-labelledby="tix-h">
+  <section class="section tix on-sand has-wm" aria-labelledby="tix-h">
+    <Watermark kind="flower" pos="left -12rem bottom -10rem" size="40rem" opacity={0.06} tone="var(--ink)" />
     <div class="wrap">
       <div class="head">
         <div>
@@ -246,16 +255,17 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
         </ul>
         <p><a class="btn" href="/plan/">Plan your trip</a></p>
       </div>
+      <div class="vflourish" aria-hidden="true"><Brand kind="vdivider-a" /></div>
       <div class="imgs">
         <div class="i1"><Photo src={photos.crowdCircle} alt="Festival-goers arm in arm in a joyful line on the grass at Weston Park" sizes="(max-width: 900px) 90vw, 560px" widths={[500, 800, 1100]} /></div>
         <div class="i2"><Photo src={photos.tents} alt="A yellow geodesic dome stage with dancers and musicians" sizes="320px" widths={[320, 600]} /></div>
-        <div class="deco" aria-hidden="true"><Sun /></div>
       </div>
     </div>
   </section>
 
   <!-- ═════════ GET INVOLVED ═════════ -->
-  <section class="section involve on-teal grain" aria-labelledby="inv-h">
+  <section class="section involve on-teal grain has-wm" aria-labelledby="inv-h">
+    <Watermark kind="moon" pos="right -8rem bottom -3rem" size="min(100vw, 60rem)" opacity={0.1} tone="var(--paper)" />
     <div class="wrap">
       <div class="head">
         <div>
@@ -298,17 +308,25 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   .hero-bg :global(img) { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); animation: settle 2.4s var(--ease) both; }
   @keyframes settle { from { transform: scale(1.22); filter: brightness(.4); } to { transform: scale(1.08); filter: none; } }
   .sky { position: absolute; inset: 0; z-index: -2; background:
-      radial-gradient(70% 55% at 50% 100%, rgba(242,100,74,.55), transparent 70%),
-      linear-gradient(180deg, rgba(16,15,36,.82) 0%, rgba(16,15,36,.55) 45%, rgba(16,15,36,.9) 100%); }
-  .hero-sun { position: absolute; right: -14%; bottom: 0; width: min(88vw, 64rem); z-index: -1; transform: translate(0, calc(46% - var(--p, 0) * 14%)); opacity: .95; animation: rise 3.2s var(--ease) 0.2s both; mix-blend-mode: screen; pointer-events: none; }
-  @keyframes rise { from { transform: translate(0, 120%); opacity: 0; } to { transform: translate(0, 46%); opacity: .95; } }
-  @media (max-width: 760px) { .hero-sun { right: -38%; width: 120vw; transform: translate(0, 52%); } @keyframes rise { from { transform: translate(0, 120%); opacity: 0; } to { transform: translate(0, 52%); opacity: .8; } } }
-  @media (max-width: 760px) { .sky { background: radial-gradient(90% 40% at 50% 100%, rgba(242,100,74,.5), transparent 70%), linear-gradient(180deg, rgba(16,15,36,.78), rgba(16,15,36,.74) 50%, rgba(16,15,36,.92)); } }
+      radial-gradient(60% 50% at 80% 100%, rgba(250,150,94,.38), transparent 70%),
+      linear-gradient(90deg, rgba(20,19,46,.78) 0%, rgba(20,19,46,.45) 55%, rgba(20,19,46,.2) 100%),
+      linear-gradient(180deg, rgba(20,19,46,.55) 0%, rgba(20,19,46,0) 30%, rgba(20,19,46,.7) 100%); }
+  .hero-rise { z-index: -1; animation: rise 3.2s var(--ease) .3s both; mix-blend-mode: screen; transform-origin: 80% 100%; }
+  @keyframes rise { from { transform: translateY(40%); opacity: 0; } to { transform: none; opacity: .6; } }
+  .hero-video { position: absolute; inset: 0; z-index: -2; container-type: size; overflow: hidden; }
+  .hero-video :global(iframe) { position: absolute; top: 50%; left: 50%; width: max(100cqw, 177.78cqh); height: max(56.25cqw, 100cqh); transform: translate(-50%, -50%); border: 0; pointer-events: none; opacity: 0; transition: opacity 1.8s ease; }
+  .hero-video.playing :global(iframe) { opacity: 1; }
+  .vid-toggle { position: absolute; right: var(--gutter); top: calc(var(--header-h) + 1rem); z-index: 3; display: inline-flex; align-items: center; gap: .6rem; background: rgba(20,19,46,.6); backdrop-filter: blur(8px); color: var(--paper); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: .5em 1em .5em .8em; font: 700 .72rem var(--font-cond); letter-spacing: .16em; text-transform: uppercase; cursor: pointer; transition: .3s; }
+  .vid-toggle:hover { background: var(--paper); color: var(--night); }
+  .vid-toggle .ic { width: .75rem; height: .75rem; border-left: 3px solid currentColor; border-right: 3px solid currentColor; box-sizing: border-box; }
+  .vid-toggle[aria-pressed='true'] .ic { border: 0; border-left: .8rem solid currentColor; border-top: .45rem solid transparent; border-bottom: .45rem solid transparent; width: 0; height: 0; }
+  @media (max-width: 760px) { .sky { background: radial-gradient(90% 40% at 50% 100%, rgba(250,150,94,.4), transparent 70%), linear-gradient(180deg, rgba(20,19,46,.7), rgba(20,19,46,.6) 50%, rgba(20,19,46,.9)); } }
   .hero-copy { padding-block: clamp(1rem, 3vh, 3rem) clamp(2rem, 5vh, 3.5rem); position: relative; }
   .display { margin: 0.3em 0 0.3em; display: grid; }
-  .hero .display { font-size: clamp(2.8rem, 1rem + 6.4vw, 6.6rem); }
-  .display em { font-style: italic; color: var(--sun); font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; }
-  .hero .lede { color: #efe9ff; max-width: 34ch; }
+  .hero .display { font-size: clamp(2.5rem, 1rem + 6.4vw, 6.6rem); }
+  .display em { letter-spacing: .02em; }
+  .display em { font-style: normal; font-family: var(--font-inline); color: var(--glow); text-shadow: 0 0 .5em rgba(250,150,94,.55); }
+  .hero .lede { color: #fbf3e6; max-width: 34ch; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
   .cta { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.5rem; }
   .hero-meta { margin-top: clamp(1.5rem, 4vh, 2.6rem); display: flex; flex-wrap: wrap; gap: 2rem 3.5rem; align-items: center; }
   .where { display: flex; align-items: center; gap: 0.8rem; margin: 0; line-height: 1.3; font-size: 0.95rem; color: var(--glow); }
@@ -318,11 +336,11 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   .display .hero-in { display: block; }
   @keyframes up { to { opacity: 1; transform: none; } }
   :global(html.calm) .hero-in { opacity: 1; transform: none; animation: none; }
-  @media (prefers-reduced-motion: reduce) { .hero-in { opacity: 1; transform: none; animation: none; } .hero-sun { animation: none; } .hero-bg :global(img) { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .hero-in { opacity: 1; transform: none; animation: none; } .hero-rise { animation: none; opacity: .6; } .hero-bg :global(img) { animation: none; } }
 
   /* ── Manifesto ── */
   .manifesto { text-align: left; }
-  .fill { font-family: var(--font-display); font-size: clamp(1.9rem, 1.2rem + 3vw, 3.7rem); line-height: 1.12; letter-spacing: -0.01em; margin: 1.2rem 0 2rem; font-variation-settings: 'opsz' 96, 'SOFT' 70, 'WONK' 1; }
+  .fill { font-family: var(--font-display); font-size: clamp(1.9rem, 1.2rem + 3vw, 3.7rem); line-height: 1.12; letter-spacing: -0.01em; margin: 1.2rem 0 2rem; }
   .fill span { color: rgba(251,243,230,.2); transition: color .5s; }
   .fill span.lit { color: var(--paper); }
   :global(html:not(.js)) .fill span { color: var(--paper); }
@@ -332,7 +350,7 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   .facts .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
   @media (min-width: 880px) { .facts .grid { grid-template-columns: repeat(6, 1fr); } }
   .fact { text-align: left; }
-  .fact b { font-family: var(--font-display); font-size: clamp(2.4rem, 1.6rem + 3vw, 4.3rem); line-height: 1; font-weight: 650; font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1; font-variant-numeric: tabular-nums; }
+  .fact b { font-family: var(--font-display); font-size: clamp(2.4rem, 1.6rem + 3vw, 4.3rem); line-height: 1; font-weight: 400; font-variant-numeric: tabular-nums; }
   .fact .plus { font-size: clamp(2.4rem, 1.6rem + 3vw, 4.3rem); }
   .fact span { display: block; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em; margin-top: 0.4rem; max-width: 14ch; line-height: 1.25; }
 
@@ -363,7 +381,7 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   @media (min-width: 900px) { .tabs { flex-direction: column; overflow: visible; } }
   .tabs button { display: flex; align-items: baseline; gap: .9rem; text-align: left; background: none; border: 0; border-bottom: 1px solid rgba(255,255,255,.18); color: inherit; padding: .9rem .2rem; cursor: pointer; font: inherit; white-space: nowrap; opacity: .6; transition: .3s var(--ease); }
   .tabs .n { font-size: .75rem; letter-spacing: .2em; color: var(--sun); }
-  .tabs .t { font-family: var(--font-display); font-size: 1.35rem; font-variation-settings: 'opsz' 36, 'SOFT' 60; }
+  .tabs .t { font-family: var(--font-display); font-size: 1.35rem; }
   .tabs button:hover { opacity: 1; }
   .tabs button[aria-selected='true'] { opacity: 1; border-color: var(--sun); transform: translateX(6px); }
   .panel { display: grid; gap: 1.6rem; animation: fade .6s var(--ease); }
@@ -395,7 +413,7 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   .tier.hot .muted { color: #b9b5d6; }
   .tier .pill { justify-self: start; margin-bottom: .5rem; }
   .tier h3 { font-size: 1.5rem; }
-  .tier .price { font-family: var(--font-display); font-size: clamp(3rem, 2rem + 3vw, 4.4rem); line-height: 1; margin: .2rem 0; font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1; }
+  .tier .price { font-family: var(--font-display); font-size: clamp(3rem, 2rem + 3vw, 4.4rem); line-height: 1; margin: .2rem 0; }
   .tier .btn { justify-self: start; margin-top: 1rem; }
   .tier.hot .btn { --bg: var(--sun); --fg: var(--night); }
   .tier.side { background: transparent; box-shadow: none; border: 2px dashed var(--ink); }
@@ -412,7 +430,8 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
 
   /* ── Home ── */
   .home .grid { display: grid; gap: 3rem; align-items: center; }
-  @media (min-width: 900px) { .home .grid { grid-template-columns: 1fr 1.1fr; gap: 5rem; } }
+  .vflourish { display: none; color: var(--clay); width: 4.2rem; }
+  @media (min-width: 900px) { .home .grid { grid-template-columns: 1fr auto 1.1fr; gap: 3rem; } .vflourish { display: block; } }
   .ticks { list-style: none; padding: 0; margin: 1.5rem 0 2rem; display: grid; gap: .6rem; }
   .ticks li { padding-left: 2rem; position: relative; font-weight: 600; }
   .ticks li::before { content: ''; position: absolute; left: 0; top: .35em; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: radial-gradient(circle, var(--sun) 35%, var(--coral) 36%); }
@@ -420,8 +439,6 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   .i1 { border-radius: 2rem 2rem 2rem 8rem; overflow: hidden; aspect-ratio: 4/3.2; }
   .i1 :global(img), .i2 :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .i2 { position: absolute; right: -4%; bottom: 0; width: 38%; aspect-ratio: 3/4; border-radius: 1.2rem; overflow: hidden; border: 6px solid var(--paper); box-shadow: 0 24px 40px -20px rgba(0,0,0,.5); }
-  .deco { position: absolute; width: 9rem; left: -3rem; top: -3rem; z-index: -1; }
-  @media (max-width: 700px) { .deco { display: none; } }
 
   /* ── Involve ── */
   .roles { display: grid; gap: 1rem; list-style: none; padding: 0; margin: 0; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
@@ -446,14 +463,13 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
   const calm = () => document.documentElement.classList.contains('calm');
 
   const hero = document.querySelector<HTMLElement>('[data-hero]');
-  const sun = document.querySelector<HTMLElement>('[data-sun]');
   const bg = document.querySelector<HTMLElement>('[data-parallax]');
   const fill = document.querySelectorAll<HTMLElement>('[data-fill] span');
   const fillWrap = document.querySelector<HTMLElement>('[data-fill]');
 
   const onScroll = () => {
     const y = scrollY, vh = innerHeight;
-    if (hero && sun && !reduce && !calm()) hero.style.setProperty('--p', String(Math.min(1, y / vh)));
+    
     if (bg && !reduce && !calm()) {
       const r = bg.parentElement!.getBoundingClientRect();
       bg.style.transform = `translateY(${(r.top / vh) * -14}%)`;
@@ -505,4 +521,41 @@ const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '2
       });
     });
   });
+
+  // ── Hero background film (the festival's own YouTube aftermovie) ──
+  const box = document.querySelector<HTMLElement>('[data-hero-video]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-video-toggle]');
+  if (box && toggle) {
+    const conn = (navigator as any).connection;
+    const saver = conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''));
+    const portrait = matchMedia('(max-width: 760px)').matches;
+    const id = portrait ? box.dataset.mobile! : box.dataset.desktop!;
+    const origin = 'https://www.youtube-nocookie.com';
+    let frame: HTMLIFrameElement | null = null, paused = false;
+    const cmd = (func: string) => frame?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args: '' }), origin);
+    const paint = () => { toggle.setAttribute('aria-pressed', String(paused)); toggle.querySelector('.lbl')!.textContent = paused ? 'Play film' : 'Pause film'; };
+    const start = () => {
+      if (frame || reduce || saver || calm()) return;
+      frame = document.createElement('iframe');
+      const q = new URLSearchParams({ autoplay: '1', mute: '1', controls: '0', loop: '1', playlist: id, playsinline: '1', modestbranding: '1', rel: '0', iv_load_policy: '3', disablekb: '1', fs: '0', enablejsapi: '1', start: '0', end: '130', origin: location.origin });
+      frame.src = `${origin}/embed/${id}?${q}`;
+      frame.title = 'Background film from past Soul Revolution festivals';
+      frame.allow = 'autoplay; encrypted-media';
+      frame.tabIndex = -1;
+      frame.setAttribute('aria-hidden', 'true');
+      frame.addEventListener('load', () => frame!.contentWindow!.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), origin));
+      box.appendChild(frame);
+      toggle.hidden = false;
+    };
+    addEventListener('message', (e) => {
+      if (e.origin !== origin || !frame || e.source !== frame.contentWindow) return;
+      try { const d = JSON.parse(e.data); const st = d?.info?.playerState ?? d?.info?.info?.playerState; if (st === 1) box.classList.add('playing'); } catch {}
+    });
+    toggle.addEventListener('click', () => { paused = !paused; cmd(paused ? 'pauseVideo' : 'playVideo'); paint(); });
+    // stop paying for video you can't see
+    new IntersectionObserver(([en]) => { if (!paused) cmd(en.isIntersecting ? 'playVideo' : 'pauseVideo'); }, { threshold: 0.05 }).observe(box);
+    new MutationObserver(() => { if (calm()) { cmd('pauseVideo'); paused = true; paint(); } }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    const kick = () => setTimeout(start, 400);
+    if (document.readyState === 'complete') kick(); else addEventListener('load', kick, { once: true });
+  }
 </script>

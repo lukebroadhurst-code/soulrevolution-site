@@ -9,5 +9,6 @@ export default defineConfig({
   build: { format: 'directory' },
   integrations: [sitemap()],
   image: { layout: 'constrained' },
+  vite: { build: { assetsInlineLimit: 0 } },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
 });

@@ -1,4 +1,6 @@
 ---
+import Watermark from './Watermark.astro';
+import Divider from './Divider.astro';
 interface Props { heading?: string; sub?: string; tone?: 'night' | 'coral' | 'paper'; id?: string }
 const {
   heading = 'Join the revolution',
@@ -8,12 +10,14 @@ const {
 } = Astro.props;
 const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT ?? '';
 ---
-<section class:list={['news section-tight', `on-${tone === 'paper' ? 'sand' : tone}`]} aria-labelledby={`${id}-h`}>
+<section class:list={['news section-tight has-wm', `on-${tone === 'paper' ? 'sand' : tone}`]} aria-labelledby={`${id}-h`}>
+  <Watermark kind="sunmoon" pos="right -10rem center" size="min(100vw, 48rem)" opacity={0.12} tone="var(--night)" />
   <div class="wrap news-grid">
     <div>
       <p class="eyebrow">The mailing list</p>
       <h2 class="h2" id={`${id}-h`}>{heading}</h2>
       <p class="lede">{sub}</p>
+      <Divider class="left" />
     </div>
     <form class="news-form" data-news data-endpoint={endpoint} novalidate>
       <label for={`${id}-email`}>Your email</label>
