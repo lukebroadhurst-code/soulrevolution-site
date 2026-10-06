@@ -1,0 +1,190 @@
+---
+import { NAV, SITE } from '../data/site';
+import mark from '../assets/brand/mark.svg';
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<header class="site-header" data-header>
+  <div class="bar wrap">
+    <a href="/" class="brand" aria-label={`${SITE.name} — home`}>
+      <img src={mark.src} alt="" width="54" height="38" class="brand-mark" />
+      <span class="brand-text"><b>Soul Revolution</b><i>Festival · 2027</i></span>
+    </a>
+
+    <nav class="desk" aria-label="Main">
+      <ul>
+        {NAV.map((item) =>
+          'children' in item ? (
+            <li class="has-sub">
+              <button type="button" aria-expanded="false" aria-haspopup="true" data-sub>
+                {item.label}
+                <svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </button>
+              <ul class="sub">
+                {item.children!.map((c) => (
+                  <li><a href={c.href} aria-current={isActive(c.href) ? 'page' : undefined}>{c.label}</a></li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li><a href={item.href} aria-current={isActive(item.href!) ? 'page' : undefined}>{item.label}</a></li>
+          ),
+        )}
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <a class="btn btn-sun btn-sm cta" href="/tickets/">Tickets</a>
+      <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu" data-burger>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" data-menu hidden>
+  <div class="menu-inner wrap">
+    <ul>
+      {NAV.map((item) =>
+        'children' in item ? (
+          <li class="group">
+            <span class="group-label">{item.label}</span>
+            <ul>
+              {item.children!.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+            </ul>
+          </li>
+        ) : (
+          <li class="big"><a href={item.href}>{item.label}</a></li>
+        ),
+      )}
+    </ul>
+    <div class="menu-foot">
+      <a class="btn btn-sun btn-lg" href="/tickets/">Get tickets</a>
+      <p>{SITE.dateShort}<br />{SITE.venue.name}, Shropshire</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .site-header {
+    position: fixed; inset: 0 0 auto 0; z-index: 100; height: var(--header-h);
+    color: var(--paper);
+    background: linear-gradient(180deg, rgba(16,15,36,.72), rgba(16,15,36,0));
+    transition: background 0.4s var(--ease), backdrop-filter 0.4s, box-shadow 0.4s, transform 0.5s var(--ease);
+  }
+  .site-header.stuck {
+    background: color-mix(in srgb, var(--night) 86%, transparent);
+    backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 1px 0 rgba(255,255,255,.07);
+  }
+  .site-header.hide { transform: translateY(-100%); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 1rem; }
+
+  .brand { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
+  .brand-mark { width: 3.1rem; height: auto; transition: transform 0.8s var(--ease); }
+  .brand:hover .brand-mark { transform: rotate(-6deg) scale(1.06); }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.05; }
+  .brand-text b { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; letter-spacing: 0.01em; font-variation-settings: 'opsz' 36, 'SOFT' 40; }
+  .brand-text i { font-style: normal; font-size: 0.64rem; letter-spacing: 0.3em; text-transform: uppercase; color: #e6e1f7; margin-top: 0.3em; }
+
+  .desk ul { display: flex; gap: clamp(0.8rem, 1.6vw, 2rem); list-style: none; margin: 0; padding: 0; align-items: center; }
+  .desk a, .desk button {
+    background: none; border: 0; color: inherit; font: 600 0.88rem/1 var(--font-body); letter-spacing: 0.04em;
+    text-decoration: none; padding: 0.6rem 0.2rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45em; position: relative;
+  }
+  .desk a::after, .desk button::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0.2rem; height: 2px; background: var(--sun);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease);
+  }
+  .desk a:hover::after, .desk button:hover::after, .desk a[aria-current='page']::after { transform: scaleX(1); }
+  .has-sub { position: relative; }
+  .sub {
+    position: absolute; top: 100%; left: -1rem; min-width: 14rem; padding: 0.6rem !important; flex-direction: column;
+    gap: 0 !important; align-items: stretch !important; background: var(--night); border-radius: 1rem;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+    opacity: 0; visibility: hidden; transform: translateY(8px); transition: 0.3s var(--ease);
+  }
+  .has-sub:hover .sub, .has-sub.open .sub, .has-sub:focus-within .sub { opacity: 1; visibility: visible; transform: none; }
+  .sub a { padding: 0.75rem 1rem !important; border-radius: 0.6rem; width: 100%; }
+  .sub a:hover { background: rgba(255,255,255,.08); }
+  .sub a::after { display: none; }
+
+  .actions { display: flex; align-items: center; gap: 0.75rem; }
+  .burger { display: none; background: none; border: 0; width: 2.9rem; height: 2.9rem; position: relative; cursor: pointer; color: inherit; }
+  .burger span { position: absolute; left: 0.75rem; right: 0.75rem; height: 2px; background: currentColor; border-radius: 2px; transition: 0.4s var(--ease); }
+  .burger span:nth-child(1) { top: 1.1rem; } .burger span:nth-child(2) { top: 1.45rem; } .burger span:nth-child(3) { top: 1.8rem; }
+  .burger[aria-expanded='true'] span:nth-child(1) { top: 1.45rem; transform: rotate(45deg); }
+  .burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  .burger[aria-expanded='true'] span:nth-child(3) { top: 1.45rem; transform: rotate(-45deg); }
+
+  @media (max-width: 1060px) {
+    .desk { display: none; }
+    .burger { display: block; }
+  }
+  @media (max-width: 420px) { .brand-text i { display: none; } .cta { display: none; } }
+
+  /* Mobile menu */
+  .menu {
+    position: fixed; inset: 0; z-index: 90; background: var(--night); color: var(--paper); overflow-y: auto;
+    padding-top: calc(var(--header-h) + 1rem);
+    background-image: radial-gradient(120% 70% at 100% 100%, rgba(242,100,74,.35), transparent 60%), radial-gradient(90% 60% at 0% 0%, rgba(31,154,163,.25), transparent 55%);
+  }
+  .menu[hidden] { display: none; }
+  .menu ul { list-style: none; margin: 0; padding: 0; }
+  .menu-inner { padding-bottom: 3rem; }
+  .menu .big a { display: block; font-family: var(--font-display); font-size: clamp(2.1rem, 8vw, 3.4rem); font-weight: 600; text-decoration: none; padding: 0.3rem 0; font-variation-settings: 'opsz' 96, 'SOFT' 50, 'WONK' 1; }
+  .menu .group { margin: 1.1rem 0; }
+  .group-label { font-size: 0.72rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--sun); font-weight: 700; }
+  .menu .group ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0.2rem 1rem; margin-top: 0.4rem; }
+  .menu .group a { font-family: var(--font-display); font-size: 1.5rem; text-decoration: none; display: block; padding: 0.25rem 0; }
+  .menu a:hover { color: var(--sun); }
+  .menu-foot { margin-top: 2rem; display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+  .menu-foot p { margin: 0; font-size: 0.9rem; opacity: 0.8; line-height: 1.4; }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]')!;
+  const menu = document.querySelector<HTMLElement>('[data-menu]')!;
+
+  let last = 0;
+  const onScroll = () => {
+    const y = window.scrollY;
+    header.classList.toggle('stuck', y > 24);
+    // tuck away when scrolling down past the fold, return on scroll up
+    const menuOpen = burger.getAttribute('aria-expanded') === 'true';
+    header.classList.toggle('hide', !menuOpen && y > 700 && y > last + 6);
+    if (y < last - 6 || y < 700) header.classList.remove('hide');
+    last = y;
+  };
+  onScroll();
+  addEventListener('scroll', onScroll, { passive: true });
+
+  const setMenu = (open: boolean) => {
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.hidden = !open;
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    header.classList.toggle('stuck', open || scrollY > 24);
+  };
+  burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
+
+  document.querySelectorAll<HTMLButtonElement>('[data-sub]').forEach((btn) => {
+    const li = btn.parentElement!;
+    btn.addEventListener('click', () => {
+      const open = !li.classList.contains('open');
+      document.querySelectorAll('.has-sub.open').forEach((x) => { x.classList.remove('open'); x.querySelector('button')?.setAttribute('aria-expanded', 'false'); });
+      li.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+  addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (burger.getAttribute('aria-expanded') === 'true') { setMenu(false); burger.focus(); }
+    document.querySelectorAll('.has-sub.open').forEach((x) => { x.classList.remove('open'); x.querySelector('button')?.setAttribute('aria-expanded', 'false'); });
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('.has-sub')) document.querySelectorAll('.has-sub.open').forEach((x) => x.classList.remove('open'));
+  });
+</script>

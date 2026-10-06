@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+import { photos } from '../data/photos';
+const contacts = [
+  ['Ticket & customer support', SITE.emails.support],
+  ['General enquiries', SITE.emails.general],
+  ['Media & partnerships', SITE.emails.media],
+  ['Operations & visual arts', SITE.emails.operations],
+  ['Founder & Managing Director', SITE.emails.founder],
+];
+---
+<Base title="Connect" description="Contact Soul Revolution Festival: ticket support, press and partnerships, operations, and social channels." newsletter="night">
+  <PageHero eyebrow="Connect" title="Say hello." lede="We read every message, and we reply as soon as we can." image={photos.comeAsYouAre} alt="" position="50% 50%" />
+  <section class="section">
+    <div class="wrap two">
+      <ul class="mail">
+        {contacts.map(([l, e]) => (<li><span>{l}</span><a href={`mailto:${e}`}>{e}</a></li>))}
+      </ul>
+      <div>
+        <h2 class="h3">Follow the journey</h2>
+        <ul class="soc">
+          <li><a class="btn btn-ghost" href={SITE.links.instagram} rel="noopener">Instagram <small>@soul.revolution.festival</small></a></li>
+          <li><a class="btn btn-ghost" href={SITE.links.facebook} rel="noopener">Facebook</a></li>
+          <li><a class="btn btn-ghost" href={SITE.links.youtube} rel="noopener">YouTube <small>@soulrevolutionfestival</small></a></li>
+        </ul>
+        <h2 class="h3" style="margin-top:2.5rem">Find us</h2>
+        <p>{SITE.venue.name}, {SITE.venue.locality}<br />{SITE.venue.postcode}</p>
+        <p><a class="link-arrow" href={SITE.venue.mapUrl} rel="noopener">Open in Maps</a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .two { display: grid; gap: 3rem; } @media (min-width: 900px) { .two { grid-template-columns: 1.3fr 1fr; gap: 6rem; } }
+  .mail { list-style: none; padding: 0; margin: 0; } .mail li { padding: 1.3rem 0; border-bottom: 1px solid rgba(31,30,61,.18); display: grid; gap: .2rem; }
+  .mail span { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: var(--coral-ink); }
+  .mail a { font-family: var(--font-display); font-size: clamp(1.3rem, 1rem + 1.4vw, 2rem); text-decoration: none; overflow-wrap: anywhere; } .mail a:hover { color: var(--coral-ink); }
+  .soc { list-style: none; padding: 0; display: grid; gap: .7rem; justify-items: start; margin-top: 1rem; } .soc small { opacity: .7; text-transform: none; letter-spacing: 0; font-weight: 500; }
+</style>

@@ -1,0 +1,93 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { gallery, photos } from '../data/photos';
+import { GALLERY_MAP, GALLERY_TAGS } from '../data/site';
+
+const label = Object.fromEntries(GALLERY_TAGS.map((t) => [t.id, t.label]));
+const ids = Object.keys(GALLERY_MAP).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+const items = await Promise.all(ids.map(async (id) => {
+  const meta = gallery[id];
+  if (!meta) return null;
+  const thumb = await getImage({ src: meta, width: 480, format: 'webp', quality: 72 });
+  const big = await getImage({ src: meta, width: 1080, format: 'webp', quality: 80 });
+  return { id, tag: GALLERY_MAP[id], thumb: thumb.src, big: big.src, w: thumb.attributes.width, h: thumb.attributes.height };
+}));
+const imgs = items.filter(Boolean) as NonNullable<(typeof items)[number]>[];
+---
+<Base title="Gallery" description="Photographs from Soul Revolution Festival: music, fire ceremonies, dance, families, faces and the land of Weston Park." newsletter="night">
+  <PageHero eyebrow="Gallery" title="Moments from the field." lede="Faces, fire and music from past gatherings. Click any image to see it larger." image={photos.fireCircle} alt="" position="50% 60%" />
+  <section class="section">
+    <div class="wrap">
+      <div class="chips" role="group" aria-label="Filter photographs">
+        {GALLERY_TAGS.map((t, i) => (<button type="button" class:list={['chip', i === 0 && 'on']} data-tag={t.id} aria-pressed={i === 0 ? 'true' : 'false'}>{t.label}</button>))}
+      </div>
+      <ul class="grid" data-grid>
+        {imgs.map((im, i) => (
+          <li data-tag={im.tag}>
+            <button type="button" data-open={i} aria-label={`Open photo ${i + 1}, ${label[im.tag]}`}>
+              <img src={im.thumb} width={im.w} height={im.h} alt={`${label[im.tag]} at Soul Revolution Festival`} loading="lazy" decoding="async" />
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p class="muted credit">Photography © Soul Revolution Festival and its photographers.</p>
+    </div>
+  </section>
+
+  <dialog class="lb" data-lb aria-label="Photo viewer">
+    <button class="x" type="button" data-close aria-label="Close">×</button>
+    <button class="nav prev" type="button" data-prev aria-label="Previous photo">‹</button>
+    <img alt="" data-img />
+    <button class="nav next" type="button" data-next aria-label="Next photo">›</button>
+    <p class="cap" data-cap></p>
+  </dialog>
+  <script type="application/json" id="gal-data" set:html={JSON.stringify(imgs.map((i) => ({ src: i.big, tag: i.tag, label: label[i.tag] })))} />
+</Base>
+
+<style>
+  .chips { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .chip { border: 1.5px solid var(--ink); background: transparent; border-radius: 999px; padding: .5em 1.1em; font: 700 .85rem var(--font-body); cursor: pointer; color: var(--ink); transition: .25s; } .chip:hover, .chip.on { background: var(--ink); color: var(--paper); }
+  .grid { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: .8rem; }
+  @media (min-width: 700px) { .grid { columns: 3; } } @media (min-width: 1100px) { .grid { columns: 4; column-gap: 1rem; } }
+  .grid li { break-inside: avoid; margin-bottom: .8rem; } @media (min-width: 1100px) { .grid li { margin-bottom: 1rem; } }
+  .grid li[hidden] { display: none; }
+  .grid button { display: block; width: 100%; padding: 0; border: 0; background: var(--sand); border-radius: 1rem; overflow: hidden; cursor: zoom-in; position: relative; }
+  .grid img { width: 100%; height: auto; transition: transform .8s var(--ease), filter .4s; } .grid button:hover img { transform: scale(1.05); filter: saturate(1.15); }
+  .credit { margin-top: 2rem; font-size: .85rem; }
+  .lb { border: 0; padding: 0; background: rgba(16,15,36,.96); width: 100vw; height: 100dvh; max-width: none; max-height: none; color: #fff; }
+  .lb::backdrop { background: rgba(16,15,36,.9); }
+  .lb[open] { display: grid; place-items: center; }
+  .lb img { max-width: min(92vw, 78vh * .75); max-height: 88dvh; width: auto; height: auto; border-radius: .8rem; box-shadow: 0 40px 80px -30px #000; }
+  .lb button { position: absolute; background: rgba(255,255,255,.1); color: #fff; border: 0; border-radius: 50%; width: 3.2rem; height: 3.2rem; font-size: 2rem; line-height: 1; cursor: pointer; transition: .25s; } .lb button:hover { background: var(--coral); }
+  .x { top: 1rem; right: 1rem; } .prev { left: 1rem; top: 50%; transform: translateY(-50%); } .next { right: 1rem; top: 50%; transform: translateY(-50%); }
+  .cap { position: absolute; bottom: 1rem; left: 0; right: 0; text-align: center; margin: 0; font-size: .85rem; opacity: .75; }
+  @media (max-width: 600px) { .prev { left: .3rem; } .next { right: .3rem; } }
+</style>
+
+<script>
+  const data: { src: string; tag: string; label: string }[] = JSON.parse(document.getElementById('gal-data')!.textContent!);
+  const lb = document.querySelector<HTMLDialogElement>('[data-lb]')!;
+  const img = lb.querySelector<HTMLImageElement>('[data-img]')!;
+  const cap = lb.querySelector<HTMLElement>('[data-cap]')!;
+  let cur = 0, trigger: HTMLElement | null = null;
+  const visible = () => data.map((d, i) => i).filter((i) => !document.querySelector<HTMLElement>(`[data-open="${i}"]`)!.closest('li')!.hidden);
+  const show = (i: number) => { cur = i; img.src = data[i].src; img.alt = `${data[i].label} at Soul Revolution Festival`; cap.textContent = `${visible().indexOf(i) + 1} / ${visible().length} · ${data[i].label}`; };
+  const step = (d: number) => { const v = visible(); show(v[(v.indexOf(cur) + d + v.length) % v.length]); };
+  document.querySelectorAll<HTMLButtonElement>('[data-open]').forEach((b) => b.addEventListener('click', () => { trigger = b; lb.showModal(); show(Number(b.dataset.open)); }));
+  lb.querySelector('[data-close]')!.addEventListener('click', () => lb.close());
+  lb.querySelector('[data-prev]')!.addEventListener('click', () => step(-1));
+  lb.querySelector('[data-next]')!.addEventListener('click', () => step(1));
+  lb.addEventListener('click', (e) => { if (e.target === lb) lb.close(); });
+  lb.addEventListener('close', () => trigger?.focus());
+  lb.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1); });
+  let sx = 0; lb.addEventListener('touchstart', (e) => (sx = e.touches[0].clientX), { passive: true });
+  lb.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1); });
+
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((x) => { x.classList.toggle('on', x === c); x.setAttribute('aria-pressed', String(x === c)); });
+    document.querySelectorAll<HTMLElement>('[data-grid] li').forEach((li) => (li.hidden = c.dataset.tag !== 'all' && li.dataset.tag !== c.dataset.tag));
+  }));
+</script>

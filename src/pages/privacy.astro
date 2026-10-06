@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+---
+<Base title="Privacy" description="How the Soul Revolution Festival website handles your information: mailing-list sign-ups, emails, local-only preferences and third-party services." newsletter={false}>
+  <PageHero eyebrow="Legal" title="Privacy notice." lede="Plain-language: what this website does and doesn’t collect." tone="ink" />
+  <section class="section">
+    <div class="wrap-narrow prose">
+      <p class="muted">Draft for review by the festival before publication. Last updated October 2026.</p>
+      <h2>Who we are</h2>
+      <p>{SITE.name}. Questions: <a href={`mailto:${SITE.emails.general}`}>{SITE.emails.general}</a>.</p>
+      <h2>What this website collects</h2>
+      <ul>
+        <li><b>Mailing-list sign-ups.</b> If you subscribe, we use your email address to send festival news. You can unsubscribe at any time.</li>
+        <li><b>Emails you send us.</b> We use them to reply to you.</li>
+        <li><b>On your device only.</b> Your packing checklist and “calm mode” preference are saved in your browser’s local storage. They never reach us.</li>
+      </ul>
+      <p>This website does not set advertising or tracking cookies.</p>
+      <h2>Third parties</h2>
+      <p>Tickets are sold by <a href="https://dandelion.events" rel="noopener">Dandelion</a>, glamping by Posh Bells, and applications run through Google Forms and FestivalPro. Those services have their own privacy notices and handle the details you give them. The documentary video is embedded from YouTube (privacy-enhanced mode) and loads only when you open that page.</p>
+      <h2>Your rights</h2>
+      <p>You can ask us what we hold about you, to correct it, or to delete it. Email us and we’ll help.</p>
+    </div>
+  </section>
+</Base>

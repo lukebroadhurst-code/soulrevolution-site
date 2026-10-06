@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+import { photos } from '../data/photos';
+---
+<Base title="Charity: L.A.B & the Sunrise Centre" description="Soul Revolution supports L.A.B Charity and the Sunrise Centre in Nosy Be, Madagascar, the region’s first school for children with disabilities.">
+  <PageHero eyebrow="Charity" title="Rising, together, in Madagascar." lede="Our community has partnered with L.A.B Charity to support the Sunrise Centre in Nosy Be." image={photos.hug} alt="" position="50% 30%" tone="teal" />
+
+  <section class="section">
+    <div class="wrap two">
+      <div class="prose">
+        <h2 class="h2">About L.A.B Charity</h2>
+        <p>Established in 2017, L.A.B Charity (Learn Achieve Become, a UK-registered charity) empowers people with physical and intellectual disabilities. In 2023 it opened the <b>Sunrise Centre</b> in Nosy Be, the first facility of its kind in the region.</p>
+        <p>Its curriculum covers basic education, socialisation and communication, sport, movement, play and arts, life skills, and personal development goals. Beyond the centre, L.A.B provides free education to children who would otherwise stay out of school.</p>
+        <h2 class="h2">How the partnership began</h2>
+        <p>The partnership grew from a personal journey by Imani, our Culture &amp; Media Director. During a sabbatical in Madagascar she encountered stories that inspired her to advocate for meaningful service, and our wider commitment to the Sunrise Centre followed.</p>
+      </div>
+      <div class="card big">
+        <p class="eyebrow">2025</p>
+        <h3 class="h3">A second school bus</h3>
+        <p>Before, <b>42 children and staff</b> relied on a single 16-seat bus. Our community, with a Snowdonia charity hike and L.A.B’s own efforts, raised the funds for a second bus, improving daily life for children travelling to school.</p>
+        <p><a class="btn" href={SITE.links.labCharity} rel="noopener">Donate or learn more</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-ink">
+    <div class="wrap-narrow center">
+      <p class="eyebrow">The film</p>
+      <h2 class="h2">“Freedom”: a documentary.</h2>
+      <p class="lede" style="margin-inline:auto">Narrated by Imani, a calm, humbling portrait of Madagascar and the Sunrise Centre’s mission.</p>
+      <p><a class="btn btn-sun" href="/documentary/">Watch the documentary</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .two { display: grid; gap: 3rem; align-items: start; } @media (min-width: 960px) { .two { grid-template-columns: 1.4fr 1fr; gap: 5rem; } .big { position: sticky; top: calc(var(--header-h) + 1.5rem); } }
+  .big { background: var(--sand); box-shadow: none; border-top: 6px solid var(--coral); } .big p { margin-bottom: 1rem; }
+  .center { text-align: center; } .center .eyebrow { justify-content: center; }
+</style>

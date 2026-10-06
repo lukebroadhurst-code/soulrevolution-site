@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+const wins = [
+  ['2+', 'tonnes less waste in 2026 than 2025'],
+  ['80%', 'of stage paint, and all stage fabric, diverted from landfill'],
+  ['0', 'tents ever left behind in four years'],
+  ['100%', 'alcohol-free, which changes how we treat the land'],
+];
+const learned = ['Expanded solar power across gathering spaces', 'Compost toilets', 'Car-sharing and public-transport initiatives', 'Food traders working to cut waste and use reusables', 'Reusable festival infrastructure, stored between events', 'More pre-pitched camping options', 'Dedicated waste-management teams', 'An alcohol and substance-free site'];
+---
+<Base title="Sustainability" description="How Soul Revolution Festival treads lightly: solar power, compost toilets, reusable stages, car sharing and a four-year record of never leaving a tent behind.">
+  <PageHero eyebrow="The Rising · responsibility" title="If we rise together, we take responsibility together." lede="When thousands of us build a temporary village, our choices about food, transport, waste and land carry real consequences." image={photos.sunset} alt="" position="50% 55%" tone="teal" />
+
+  <section class="section-tight on-coral">
+    <ul class="wrap wins">
+      {wins.map(([n, l]) => (<li><b>{n}</b><span>{l}</span></li>))}
+    </ul>
+  </section>
+
+  <section class="section">
+    <div class="wrap two">
+      <div class="prose">
+        <p class="eyebrow">What we’ve learned</p>
+        <h2 class="h2">Practice, not perfection.</h2>
+        <p>Over four years, we have reflected honestly on our relationship with the land, and acted.</p>
+        <ul class="ticks">{learned.map((l) => <li>{l}</li>)}</ul>
+      </div>
+      <div class="callout card">
+        <h3 class="h3">A hard lesson from 2026</h3>
+        <p>Human waste left in woodland is not harmless. It can introduce pathogens, contaminate soil and water, harm wildlife and endanger the people who clean up after us.</p>
+        <p><b>Please use only the toilets provided. Every time.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-sand">
+    <div class="wrap">
+      <p class="eyebrow">Travel lighter</p>
+      <h2 class="h2">Share the journey. Reuse what already exists.</h2>
+      <ul class="grid">
+        <li class="card"><h3>Camplight</h3><p>Affordable pre-pitched tents, so nothing is bought just to be thrown away.</p></li>
+        <li class="card"><h3>Glamping</h3><p>Fully set-up bell tents with Posh Bells and Karma Canvas.</p></li>
+        <li class="card"><h3>Car-share community</h3><p>A WhatsApp group connecting travellers from the same areas.</p></li>
+        <li class="card"><h3>Public transport</h3><p>Shuttle buses from Shifnal and Telford stations, plus cycle parking where practical.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap three">
+      <div><h3 class="h3">Food &amp; drink</h3><p>Plant-based meals with responsibly sourced meat options. Traders are asked to choose local, seasonal and responsibly sourced ingredients and cut single-use plastic. Please bring your own bottle, cup and cutlery. We don’t host brands such as Coca-Cola or Nestlé.</p></div>
+      <div><h3 class="h3">Energy &amp; water</h3><p>Off-grid solar power, improved with specialist partners every year. Every drop of water carried on site has a cost, so we ask for showers of three minutes or less and mindful drinking-water use.</p></div>
+      <div><h3 class="h3">Waste</h3><p>Reuse over replace: we invest in infrastructure we can store, repair and share, and reduce what we consume in the first place.</p></div>
+    </div>
+  </section>
+
+  <section class="section on-night grain">
+    <div class="wrap-narrow">
+      <p class="eyebrow">Beyond the festival</p>
+      <h2 class="h2">From a village for five days to land that lives all year.</h2>
+      <p class="lede">We imagine community land projects where groups collectively regenerate land: growing food, restoring biodiversity, learning traditional skills and reconnecting with nature. A community who meet every year at the festival, and help plant trees, grow food and restore habitats between.</p>
+      <p class="end">The revolution starts within. The responsibility ripples outward. And together, we rise. ❤️‍🔥</p>
+    </div>
+  </section>
+</Base>
+<style>
+  .wins { list-style: none; padding: 0; margin-inline: auto; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+  .wins b { display: block; font-family: var(--font-display); font-size: clamp(3rem, 2rem + 4vw, 5.5rem); line-height: 1; font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1; }
+  .wins span { font-weight: 700; font-size: .95rem; display: block; max-width: 18ch; line-height: 1.25; }
+  .two { display: grid; gap: 3rem; align-items: start; } @media (min-width: 900px) { .two { grid-template-columns: 1.2fr 1fr; gap: 5rem; } }
+  .ticks { list-style: none; padding: 0; display: grid; gap: .6rem; } .ticks li { padding-left: 2rem; position: relative; font-weight: 600; } .ticks li::before { content: '✺'; position: absolute; left: 0; color: var(--coral-ink); }
+  .callout { background: var(--ink); color: var(--paper); border-left: 6px solid var(--coral); } .callout p { color: #dcd8f2; }
+  .grid { list-style: none; padding: 0; display: grid; gap: 1rem; margin-top: 2rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); } .grid h3 { font-size: 1.4rem; margin-bottom: .5rem; } .grid p { margin: 0; font-size: .95rem; }
+  .three { display: grid; gap: 2.5rem; } @media (min-width: 900px) { .three { grid-template-columns: repeat(3, 1fr); gap: 3rem; } } .three h3 { margin-bottom: .8rem; }
+  .end { font-family: var(--font-display); font-size: clamp(1.5rem, 1rem + 2vw, 2.4rem); color: var(--sun); margin-top: 2rem; line-height: 1.2; font-style: italic; }
+</style>

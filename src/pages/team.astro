@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Sun from '../components/Sun.astro';
+import { TEAM } from '../data/site';
+import { photos } from '../data/photos';
+---
+<Base title="The Team" description="Meet the three directors behind Soul Revolution Festival, supported by around twenty managers and 300 volunteers.">
+  <PageHero eyebrow="About us" title="Hundreds of beautiful souls." lede="Three directors, around twenty managers, and some 300 volunteers pour their hearts into this project." image={photos.crowdCircle} alt="" position="50% 35%" />
+  <section class="section">
+    <div class="wrap">
+      <ul class="team">
+        {TEAM.map((m, i) => (
+          <li class="card reveal" style={`--i:${i}`}>
+            <div class="sun" aria-hidden="true"><Sun face rays={14 + i * 2} /></div>
+            <h2 class="h3">{m.name}</h2>
+            <p class="role">{m.role}</p>
+            <a href={`mailto:${m.email}`}>{m.email}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .team { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  .team .card { overflow: hidden; position: relative; padding-top: 11rem; } .sun { position: absolute; width: 14rem; top: -3.5rem; right: -3rem; opacity: .95; }
+  .team h2 { margin-bottom: .3rem; } .role { color: var(--muted); font-weight: 600; margin-bottom: 1.2rem; } .team a { color: var(--coral-ink); font-weight: 700; word-break: break-all; }
+</style>

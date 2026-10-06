@@ -1,0 +1,16 @@
+# Legacy WordPress URLs → new site (301). Works on Cloudflare Pages and Netlify.
+/lineup-2026/                  /lineup/                 301
+/daily-programmes/             /lineup/                 301
+/meet-the-team-2/              /team/                   301
+/events/soul-temple/           /festival/               301
+/events/soul-revolution-festival-2026/ /tickets/        301
+/events/                       /tickets/                301
+/soul-revolution-media/        /documentary/            301
+/blogs/                        /journal/                301
+/connect-2/                    /connect/                301
+/ancient-british-spirituality-rediscovering-the-sacred-landscape-of-the-british-isles/ /journal/ancient-british-spirituality-rediscovering-the-sacred-landscape-of-the-british-isles/ 301
+/huni-kuin-tribe-voices-of-the-amazon-rainforest/ /journal/huni-kuin-tribe-voices-of-the-amazon-rainforest/ 301
+/mens-circles-why-more-men-are-seeking-brotherhood-and-support/ /journal/mens-circles-why-more-men-are-seeking-brotherhood-and-support/ 301
+/shadow-work-meeting-the-hidden-self-through-jungian-psychology/ /journal/shadow-work-meeting-the-hidden-self-through-jungian-psychology/ 301
+/soul-revolution-festival-music-lineup-2026-rising-voices-to-discover/ /journal/soul-revolution-festival-music-lineup-2026-rising-voices-to-discover/ 301
+/types-of-yoga-exploring-the-many-paths-of-practice/ /journal/types-of-yoga-exploring-the-many-paths-of-practice/ 301

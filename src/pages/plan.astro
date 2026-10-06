@@ -1,0 +1,147 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import { SITE, PACKING } from '../data/site';
+import { photos } from '../data/photos';
+---
+<Base title="Plan your trip" description="Getting to Soul Revolution Festival at Weston Park, where to stay, access, families, dogs and what to pack, in one place.">
+  <PageHero eyebrow="Plan your trip" title="Everything you need to arrive ready." lede={`${SITE.dateLong}. Gates open at noon on Thursday; please depart by 2pm on Monday.`} image={photos.horse} alt="" position="50% 40%" />
+
+  <nav class="jump section-tight" aria-label="On this page">
+    <ul class="wrap">
+      <li><a href="#getting-here">Getting here</a></li><li><a href="#stay">Where to stay</a></li><li><a href="#access">Access</a></li><li><a href="#families">Families &amp; dogs</a></li><li><a href="#pack">What to pack</a></li>
+    </ul>
+  </nav>
+
+  <section class="section-tight" id="getting-here">
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">Getting here</p>
+        <h2 class="h2">Travel lighter. Share the journey.</h2>
+        <address>
+          <b>{SITE.venue.name}</b><br />Weston-under-Lizard, Shifnal<br />Staffordshire / Shropshire<br />{SITE.venue.postcode}
+        </address>
+        <p><a class="btn" href={SITE.venue.mapUrl} rel="noopener">Open in Maps</a></p>
+      </div>
+      <ul class="modes">
+        <li><b>By train + shuttle</b> Shuttle buses run from Shifnal and Telford stations. Timings are released nearer the festival.</li>
+        <li><b>By car</b> Car Park Pass £15 per vehicle. Join the community WhatsApp car-share group to find people from your area.</li>
+        <li><b>By bike</b> Cycle parking where practical.</li>
+        <li><b>Live-in vehicles</b> £60 pass for campervans and motorhomes.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-tight on-sand" id="stay">
+    <div class="wrap two">
+      <div class="im"><Photo src={photos.poshBells} alt="Bell tents at the festival" sizes="(max-width:900px) 90vw, 520px" widths={[500, 800]} /></div>
+      <div>
+        <p class="eyebrow">Where to stay</p>
+        <h2 class="h2">Pitch, glamp, or arrive to a tent.</h2>
+        <ul class="plain">
+          <li><b>Self-pitch camping</b> on the site.</li>
+          <li><b>Pre-pitched tents</b> with Camplight, affordable and ready when you arrive.</li>
+          <li><b>Glamping</b> with Posh Bells and Karma Canvas.</li>
+          <li><b>Nearby hotels</b> around Shifnal and Telford. Search for {SITE.venue.postcode}.</li>
+        </ul>
+        <a class="btn" href={SITE.links.glamping} rel="noopener">Book glamping</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" id="access">
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">Access</p>
+        <h2 class="h2">Built to include.</h2>
+        <p>Accessibility is part of the design, not an afterthought. If you have questions, email us before you book and we will help you plan.</p>
+        <p><a class="link-arrow" href={`mailto:${SITE.emails.support}?subject=Access%20enquiry`}>Email {SITE.emails.support}</a></p>
+      </div>
+      <ul class="plain">
+        <li><b>15% off + a free carer ticket</b> with proof of disability.</li>
+        <li><b>Accessible</b> toilets, showers and campsite area.</li>
+        <li><b>Wheelchair charging</b> stations on site.</li>
+        <li><b>Mostly flat terrain</b>, with an onsite accessibility lead.</li>
+        <li><b>Quiet &amp; welfare</b> PsyCare UK welfare tent, 24 hours.</li>
+        <li><b>Assistance dogs</b> welcome with proof in advance.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-tight on-teal grain" id="families">
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">Families</p>
+        <h2 class="h2">Children of the Revolution.</h2>
+        <p>A substance-free, family-friendly site with a dedicated children’s tent. Under 5s are free, under 16s £10. Children under 13 must be accompanied by an adult at all times. Ear defenders are recommended near loud stages.</p>
+      </div>
+      <div>
+        <p class="eyebrow">Dogs</p>
+        <h2 class="h2">Sorry, no pets.</h2>
+        <p>Only registered assistance and emotional-support dogs are permitted, with proof sent in advance. Dogs are never allowed in tents.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pack">
+    <div class="wrap">
+      <p class="eyebrow">What to pack</p>
+      <h2 class="h2">Your checklist, saved on this device.</h2>
+      <p class="muted">Tick things off as you pack. Nothing leaves your browser.</p>
+      <div class="pack" data-pack>
+        {PACKING.map((g) => (
+          <fieldset>
+            <legend>{g.group}</legend>
+            {g.items.map((it) => (
+              <label><input type="checkbox" data-item={it} /><span>{it}</span></label>
+            ))}
+          </fieldset>
+        ))}
+      </div>
+      <p class="progress" aria-live="polite"><b data-done>0</b> of <b data-all>0</b> packed <button type="button" class="link-arrow" data-reset>Reset</button></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .jump { background: var(--paper); border-bottom: 1px solid rgba(31,30,61,.12); position: sticky; top: var(--header-h); z-index: 20; padding-block: .7rem; }
+  .jump ul { display: flex; gap: .4rem; list-style: none; padding: 0; margin-inline: auto; overflow-x: auto; scrollbar-width: none; }
+  .jump a { display: block; white-space: nowrap; padding: .5em 1.1em; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: .88rem; background: var(--sand); } .jump a:hover { background: var(--ink); color: var(--paper); }
+  .two { display: grid; gap: 2.5rem; align-items: start; } @media (min-width: 900px) { .two { grid-template-columns: 1fr 1fr; gap: 5rem; } }
+  address { font-style: normal; font-family: var(--font-display); font-size: 1.5rem; line-height: 1.3; margin: 1.5rem 0; }
+  .modes, .plain { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 1rem; }
+  .modes li, .plain li { padding-left: 1.2rem; border-left: 3px solid var(--coral); }
+  .on-teal .plain li { border-color: var(--sun); }
+  b { font-weight: 700; } .modes b, .plain b { display: block; font-family: var(--font-display); font-size: 1.2rem; }
+  .im { border-radius: 2rem; overflow: hidden; } .im :global(img) { width: 100%; height: auto; }
+  .pack { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin-top: 2rem; }
+  fieldset { border: 0; background: #fff; border-radius: 1.2rem; padding: 1.2rem 1.4rem 1rem; margin: 0; }
+  legend { font-family: var(--font-display); font-size: 1.4rem; padding: 0; float: left; width: 100%; margin-bottom: .6rem; } legend + * { clear: both; }
+  fieldset label { display: flex; gap: .7rem; align-items: flex-start; padding: .35rem 0; font-weight: 500; font-size: .98rem; cursor: pointer; }
+  input[type=checkbox] { appearance: none; flex: none; width: 1.3rem; height: 1.3rem; margin-top: .2rem; border: 2px solid var(--ink); border-radius: 50%; display: grid; place-content: center; cursor: pointer; transition: .25s; }
+  input[type=checkbox]::before { content: ''; width: .6rem; height: .6rem; border-radius: 50%; background: var(--sun); transform: scale(0); transition: .25s var(--ease); }
+  input[type=checkbox]:checked { background: var(--coral); border-color: var(--coral); } input[type=checkbox]:checked::before { transform: scale(1); background: #fff; }
+  input[type=checkbox]:checked + span { text-decoration: line-through; opacity: .55; }
+  .progress { margin-top: 1.5rem; font-weight: 600; } .progress button { background: none; border: 0; border-bottom: 2px solid currentColor; font: inherit; color: var(--ink); cursor: pointer; margin-left: 1rem; padding: 0 0 .1em; }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pack]');
+  if (root) {
+    const boxes = [...root.querySelectorAll<HTMLInputElement>('input[data-item]')];
+    const KEY = 'sr-pack-2027';
+    let saved: string[] = [];
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch {}
+    const done = document.querySelector('[data-done]')!, all = document.querySelector('[data-all]')!;
+    all.textContent = String(boxes.length);
+    const sync = () => {
+      const on = boxes.filter((b) => b.checked).map((b) => b.dataset.item!);
+      done.textContent = String(on.length);
+      try { localStorage.setItem(KEY, JSON.stringify(on)); } catch {}
+    };
+    boxes.forEach((b) => { b.checked = saved.includes(b.dataset.item!); b.addEventListener('change', sync); });
+    document.querySelector('[data-reset]')?.addEventListener('click', () => { boxes.forEach((b) => (b.checked = false)); sync(); });
+    sync();
+  }
+</script>

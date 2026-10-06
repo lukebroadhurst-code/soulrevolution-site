@@ -1,0 +1,65 @@
+---
+interface Props { heading?: string; sub?: string; tone?: 'night' | 'coral' | 'paper'; id?: string }
+const {
+  heading = 'Join the revolution',
+  sub = 'Line-up drops, early ticket releases and the occasional note from the land. No spam, ever.',
+  tone = 'night',
+  id = 'news',
+} = Astro.props;
+const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT ?? '';
+---
+<section class:list={['news section-tight', `on-${tone === 'paper' ? 'sand' : tone}`]} aria-labelledby={`${id}-h`}>
+  <div class="wrap news-grid">
+    <div>
+      <p class="eyebrow">The mailing list</p>
+      <h2 class="h2" id={`${id}-h`}>{heading}</h2>
+      <p class="lede">{sub}</p>
+    </div>
+    <form class="news-form" data-news data-endpoint={endpoint} novalidate>
+      <label for={`${id}-email`}>Your email</label>
+      <div class="row">
+        <input id={`${id}-email`} name="email" type="email" required autocomplete="email" placeholder="you@email.com" />
+        <button class="btn btn-sun" type="submit">Subscribe</button>
+      </div>
+      <p class="hint" role="status" aria-live="polite" data-msg></p>
+      <p class="fine">We only use your email to send festival news. Unsubscribe any time. See our <a href="/privacy/">privacy notice</a>.</p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .news-grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 900px) { .news-grid { grid-template-columns: 1.1fr 1fr; gap: 5rem; } }
+  .news .lede { margin-top: 1rem; }
+  .row { display: flex; gap: 0.6rem; margin-top: 0.5rem; flex-wrap: wrap; }
+  .row input { flex: 1 1 14rem; }
+  .hint { min-height: 1.6em; margin: 0.8rem 0 0; font-weight: 600; }
+  .fine { font-size: 0.82rem; margin: 0.4rem 0 0; }
+  .on-night .fine, .on-ink .fine { opacity: .8; }
+  .on-coral .fine a { color: inherit; font-weight: 700; }
+  .on-coral .btn-sun { --bg: var(--night); --fg: var(--paper); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-news]').forEach((form) => {
+    const msg = form.querySelector<HTMLElement>('[data-msg]')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = (new FormData(form).get('email') as string || '').trim();
+      if (!/^\S+@\S+\.\S+$/.test(email)) { msg.textContent = 'Please enter a valid email address.'; return; }
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        try {
+          const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, source: location.pathname }) });
+          if (!r.ok) throw new Error();
+          msg.textContent = 'Welcome to the revolution. Check your inbox soon. ❤️‍🔥';
+          form.reset();
+        } catch { msg.textContent = 'Something went wrong. Please try again, or email hello@soulrevolutionfestival.com.'; }
+      } else {
+        // No mailing-list provider connected yet: hand the request to the team by email.
+        location.href = `mailto:hello@soulrevolutionfestival.com?subject=${encodeURIComponent('Add me to the mailing list')}&body=${encodeURIComponent('Please add ' + email + ' to the Soul Revolution mailing list.')}`;
+        msg.textContent = 'Opening your email app to send your request…';
+      }
+    });
+  });
+</script>

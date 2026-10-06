@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Sun from '../components/Sun.astro';
+---
+<Base title="Page not found" noindex newsletter={false}>
+  <section class="lost on-night grain">
+    <div class="sun" aria-hidden="true"><Sun face /></div>
+    <div class="wrap">
+      <p class="eyebrow">404</p>
+      <h1 class="display">Lost? That’s<br />part of the path.</h1>
+      <p class="lede">The page you wanted isn’t here, but the festival is. Let’s get you back.</p>
+      <p><a class="btn btn-sun btn-lg" href="/">Back to the beginning</a> <a class="btn btn-ghost btn-lg" href="/tickets/">Tickets</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .lost { min-height: 100svh; display: grid; align-items: center; position: relative; overflow: clip; padding-top: var(--header-h); } .lost .wrap { position: relative; z-index: 1; } .lost .display { margin: .3em 0; } .lost .lede { margin-bottom: 2rem; }
+  .sun { position: absolute; width: min(70vw, 44rem); right: -10%; bottom: -20%; opacity: .55; }
+</style>

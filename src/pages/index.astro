@@ -1,0 +1,508 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Sun from '../components/Sun.astro';
+import Countdown from '../components/Countdown.astro';
+import Marquee from '../components/Marquee.astro';
+import { SITE, TICKETS, STAGES, FACTS, OFFERINGS } from '../data/site';
+import { photos, gallery } from '../data/photos';
+
+const manifesto =
+  'This is not an escape. It is a return. Five days to feel everything, share everything and grow together, with fire, music, ceremony and a great many bare feet on the grass.';
+const words = manifesto.split(' ');
+
+const stageImg: Record<string, any> = {
+  music: photos.music, ceremony: photos.altar, ignite: photos.ignite, talks: photos.talks,
+  workshop: photos.workshop, family: photos.family, healing: photos.healing,
+};
+
+const offers = TICKETS.filter((t) => ['early', 'general', 'final', 'u16', 'u5'].includes(t.id)).map((t) => ({
+  '@type': 'Offer', name: t.name, price: t.price, priceCurrency: 'GBP', url: SITE.links.tickets,
+  availability: 'https://schema.org/InStock',
+}));
+const eventLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Festival',
+  name: `${SITE.name} 2027: ${SITE.theme}`,
+  description: SITE.description,
+  startDate: SITE.start,
+  endDate: SITE.end,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  image: [`${SITE.url}/og.jpg`],
+  url: SITE.url,
+  location: {
+    '@type': 'Place', name: SITE.venue.name,
+    address: { '@type': 'PostalAddress', streetAddress: 'Weston-under-Lizard', addressLocality: 'Shifnal', addressRegion: 'Shropshire', postalCode: SITE.venue.postcode, addressCountry: 'GB' },
+    geo: { '@type': 'GeoCoordinates', latitude: SITE.venue.lat, longitude: SITE.venue.lng },
+  },
+  organizer: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+  offers,
+  maximumAttendeeCapacity: SITE.capacity,
+  isAccessibleForFree: false,
+};
+
+const strip = ['Alcohol-free', 'Family-friendly', '1,000 acres of parkland', 'Fire & ceremony', 'World music', 'Healing village', 'Cold plunge & sauna', '3,000 souls', 'Come as you are'];
+const homeTickets = TICKETS.filter((t) => ['early', 'general', 'final'].includes(t.id));
+const gal = ['4-3', '26', '1-2', '10', '8-3', '15', '18', '5-1', '7-3', '29', '25', '2-1'].map((id) => gallery[id]);
+---
+<Base jsonLd={eventLd} title={undefined}>
+  <!-- ═════════ HERO ═════════ -->
+  <section class="hero on-night grain" data-hero>
+    <div class="hero-bg" aria-hidden="true">
+      <Photo src={photos.fireCircle} alt="" loading="eager" fetchpriority="high" sizes="100vw" position="50% 60%" />
+    </div>
+    <div class="sky" aria-hidden="true"></div>
+    <div class="hero-sun" aria-hidden="true" data-sun><Sun /></div>
+
+    <div class="wrap hero-copy">
+      <p class="eyebrow hero-in" style="--d:0">{SITE.theme} · {SITE.dateShort}</p>
+      <h1 class="display">
+        <span class="hero-in" style="--d:1">The&nbsp;revolution</span>
+        <span class="hero-in" style="--d:2">starts&nbsp;<em>within.</em></span>
+      </h1>
+      <p class="lede hero-in" style="--d:3">
+        Five days of world music, ceremony, healing and joy on 1,000 acres of English parkland. Sober, safe, family-friendly, and unlike anything you have done before.
+      </p>
+      <div class="cta hero-in" style="--d:4">
+        <a class="btn btn-sun btn-lg" href="/tickets/">Get tickets
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m0 0l-4-4m4 4l-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn btn-ghost btn-lg" href="/festival/">Explore the festival</a>
+      </div>
+      <div class="hero-meta hero-in" style="--d:5">
+        <Countdown />
+        <p class="where">
+          <svg viewBox="0 0 16 20" width="16" height="20" aria-hidden="true"><path d="M8 0a8 8 0 00-8 8c0 6 8 12 8 12s8-6 8-12a8 8 0 00-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z" fill="currentColor"/></svg>
+          <span><b>{SITE.venue.name}</b><br />{SITE.venue.locality}</span>
+        </p>
+      </div>
+    </div>
+    <Marquee items={strip} class="hero-strip" />
+  </section>
+
+  <!-- ═════════ MANIFESTO ═════════ -->
+  <section class="section manifesto on-ink grain" aria-labelledby="manifesto-h">
+    <div class="wrap-narrow">
+      <p class="eyebrow">Why we gather</p>
+      <h2 class="sr-only" id="manifesto-h">Our manifesto</h2>
+      <p class="fill" data-fill>
+        {words.map((w, i) => (<span style={`--i:${i}`}>{w} </span>))}
+      </p>
+      <a class="link-arrow" href="/vision-mission/">Read our vision &amp; mission
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 10h11m0 0l-4-4m4 4l-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═════════ FACTS ═════════ -->
+  <section class="facts on-coral" aria-label="The festival in numbers">
+    <div class="wrap grid">
+      {FACTS.map((f) => (
+        <div class="fact">
+          <b data-count={f.n}>{f.n}</b>{f.plus && <b class="plus">+</b>}
+          <span>{f.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═════════ EXPERIENCE (horizontal scroll) ═════════ -->
+  <section class="section exp" aria-labelledby="exp-h">
+    <div class="wrap head">
+      <div>
+        <p class="eyebrow">What happens</p>
+        <h2 class="h2" id="exp-h">A village built for<br />the whole self.</h2>
+      </div>
+      <p class="lede">Body, mind, heart and spirit. Move, listen, sing, sweat, cry, laugh, then eat well and sleep under the stars.</p>
+    </div>
+
+    <ul class="cards" tabindex="0" aria-label="Festival experiences, scroll sideways">
+      {[
+        [photos.firewalk, 'Fire & ceremony', 'Fire walking, sweat lodges and Indigenous ceremonies, held by those who carry the traditions.'],
+        [photos.drummer, 'Music from everywhere', 'Live artists and genres from around the globe. African drumming, folk, dub, kirtan, electronic.'],
+        [photos.dancers, 'Movement & dance', 'Sunrise yoga to conscious dance. Shake it off, move it through.'],
+        [photos.healing, 'The Healing Village', 'Around 25 practitioners offering massage, reiki, cold-water therapy and more.'],
+        [photos.talks, 'Revolutionary talks', 'The Soap Box: teachers, thinkers and storytellers asking the big questions.'],
+        [photos.kids, 'Children of the Revolution', 'Little ones are first-class citizens here, with their own tent, their own play, their own wonder.'],
+        [photos.horse, 'The land itself', 'Foraging, deer in the glades, the King & Queen oaks and breathtaking sunsets over Weston Park.'],
+      ].map(([img, h, p], i) => (
+        <li class="xcard reveal" style={`--i:${i % 3}`}>
+          <Photo src={img as any} alt="" sizes="(max-width: 700px) 78vw, 380px" widths={[400, 700, 1000]} />
+          <div class="x-body"><h3>{h as string}</h3><p>{p as string}</p></div>
+        </li>
+      ))}
+    </ul>
+
+    <div class="wrap offerings">
+      <ul>
+        {OFFERINGS.map((o) => <li>{o}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ STAGE EXPLORER ═════════ -->
+  <section class="section stages on-night grain" aria-labelledby="stages-h">
+    <div class="wrap">
+      <p class="eyebrow">Explore the village</p>
+      <h2 class="h2" id="stages-h">Twelve-plus stages and spaces.<br />One beating heart.</h2>
+
+      <div class="explorer" data-explorer>
+        <div class="tabs" role="tablist" aria-label="Stages and spaces" aria-orientation="vertical">
+          {STAGES.map((s, i) => (
+            <button role="tab" id={`tab-${s.id}`} aria-controls={`panel-${s.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+              <span class="n">0{i + 1}</span><span class="t">{s.name}</span>
+            </button>
+          ))}
+        </div>
+        <div class="panels">
+          {STAGES.map((s, i) => (
+            <div role="tabpanel" id={`panel-${s.id}`} aria-labelledby={`tab-${s.id}`} hidden={i !== 0} class="panel">
+              <div class="p-img"><Photo src={stageImg[s.photo]} alt="" sizes="(max-width: 900px) 100vw, 560px" widths={[500, 800, 1100]} /></div>
+              <div class="p-copy">
+                <p class="pill">{s.kind}</p>
+                <h3 class="h3">{s.name}</h3>
+                <p>{s.blurb}</p>
+                <ul>{s.facts.map((f) => <li>{f}</li>)}</ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ THE RISING ═════════ -->
+  <section class="rising on-night" aria-labelledby="rising-h">
+    <div class="rise-bg" aria-hidden="true" data-parallax>
+      <Photo src={photos.sunset} alt="" sizes="100vw" position="50% 55%" />
+    </div>
+    <div class="wrap rise-copy">
+      <p class="eyebrow">The 2027 theme</p>
+      <h2 class="display" id="rising-h">The Rising.</h2>
+      <p class="lede">Rising is more than personal transformation. It is taking responsibility for our choices, caring for our community, and remembering that we are guardians of the Earth beneath our bare feet.</p>
+      <blockquote>“If we are going to rise together, we have to take responsibility together.”</blockquote>
+      <div class="cta">
+        <a class="btn btn-sun" href="/sustainability/">How we tread lightly</a>
+        <a class="btn btn-ghost" href="/charity/">Our Madagascar partnership</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ TICKETS ═════════ -->
+  <section class="section tix on-sand" aria-labelledby="tix-h">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <p class="eyebrow">Tickets</p>
+          <h2 class="h2" id="tix-h">Your place in<br />the circle.</h2>
+        </div>
+        <p class="lede">Capped at 3,000 so it stays intimate. Release prices rise as places go, so earlier is kinder to your wallet.</p>
+      </div>
+      <ul class="tiers">
+        {homeTickets.map((t, i) => (
+          <li class:list={['tier card reveal', t.tag && 'hot']} style={`--i:${i}`}>
+            {t.tag && <span class="pill coral">{t.tag} left</span>}
+            <h3>{t.name}</h3>
+            <p class="price">£{t.price}</p>
+            <p class="muted">{t.note}</p>
+            <a class="btn btn-sm" href="/tickets/">Choose</a>
+          </li>
+        ))}
+        <li class="tier card reveal side" style="--i:3">
+          <h3>Pay it forward</h3>
+          <p class="price">£20</p>
+          <p class="muted">Fund a place for someone who needs it.</p>
+          <a class="link-arrow" href="/tickets/#fair">All the ways to make it work</a>
+        </li>
+      </ul>
+      <p class="tix-foot">Under 16s £10 · Under 5s free · Payment plans over 3–8 months · Community Care tickets · 15% off + free carer ticket for disabled guests</p>
+      <p><a class="btn btn-lg btn-sun" href="/tickets/">Build your ticket</a></p>
+    </div>
+  </section>
+
+  <!-- ═════════ GALLERY STRIP ═════════ -->
+  <section class="strip" aria-label="Photographs from past festivals">
+    <ul class="roll">
+      {[...gal, ...gal].map((g, i) => (
+        <li aria-hidden={i >= gal.length ? 'true' : undefined}><Photo src={g} alt="" sizes="260px" widths={[260, 520]} /></li>
+      ))}
+    </ul>
+    <p class="wrap"><a class="link-arrow" href="/gallery/">See the whole gallery</a></p>
+  </section>
+
+  <!-- ═════════ HOME ═════════ -->
+  <section class="section home" aria-labelledby="home-h">
+    <div class="wrap grid">
+      <div class="copy">
+        <p class="eyebrow">Our beautiful home</p>
+        <h2 class="h2" id="home-h">A thousand acres of England, held for us.</h2>
+        <p>Weston Park sits on the Shropshire and Staffordshire border, a Capability Brown landscape of glades, hillsides, grazing deer and the great King and Queen oaks. It is one of the most beautiful places in the country to gather, and the sunsets over the hillsides are awe-inspiring.</p>
+        <ul class="ticks">
+          <li>Shuttle buses from Shifnal and Telford stations</li>
+          <li>Pre-pitched, glamping and self-pitch camping</li>
+          <li>Car sharing community and cycle parking</li>
+          <li>Accessible, mostly flat, with an onsite access lead</li>
+        </ul>
+        <p><a class="btn" href="/plan/">Plan your trip</a></p>
+      </div>
+      <div class="imgs">
+        <div class="i1"><Photo src={photos.crowdCircle} alt="Festival-goers arm in arm in a joyful line on the grass at Weston Park" sizes="(max-width: 900px) 90vw, 560px" widths={[500, 800, 1100]} /></div>
+        <div class="i2"><Photo src={photos.tents} alt="A yellow geodesic dome stage with dancers and musicians" sizes="320px" widths={[320, 600]} /></div>
+        <div class="deco" aria-hidden="true"><Sun /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ GET INVOLVED ═════════ -->
+  <section class="section involve on-teal grain" aria-labelledby="inv-h">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <p class="eyebrow">Be part of it</p>
+          <h2 class="h2" id="inv-h">The festival is made by hundreds of hands.</h2>
+        </div>
+        <p class="lede">Volunteer, trade, share your gifts on stage or in a workshop. Applications for music artists and facilitators close {SITE.applicationDeadline}.</p>
+      </div>
+      <ul class="roles">
+        {[
+          ['Volunteer', 'Join around 300 souls who make the village run.', '/participate/#volunteers'],
+          ['Music artist', 'Bring your sound to the main stage.', '/participate/#music'],
+          ['Facilitator', 'Hold a workshop, circle, ceremony or talk.', '/participate/#facilitators'],
+          ['Trader & healer', 'Food, craft or healing village.', '/participate/#traders'],
+        ].map(([t, p, h], i) => (
+          <li class="reveal" style={`--i:${i}`}><a href={h}><h3>{t}</h3><p>{p}</p><span aria-hidden="true">→</span></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ BEYOND ═════════ -->
+  <section class="section beyond" aria-labelledby="bey-h">
+    <div class="wrap">
+      <p class="eyebrow">Beyond the weekend</p>
+      <h2 class="h2" id="bey-h">The revolution doesn’t end on Monday.</h2>
+      <ul class="bgrid">
+        <li class="reveal"><a href="/retreats-intimate-events/"><Photo src={photos.meditation} alt="" sizes="(max-width: 700px) 90vw, 360px" widths={[400, 700]} /><h3>Retreats &amp; intimate events</h3><p>Samhain, constellations, live storytelling: gatherings all year round.</p></a></li>
+        <li class="reveal" style="--i:1"><a href="/charity/"><Photo src={photos.hug} alt="" sizes="(max-width: 700px) 90vw, 360px" widths={[400, 700]} /><h3>Madagascar &amp; the Sunrise Centre</h3><p>Our community raised a second school bus for 42 children in Nosy Be.</p></a></li>
+        <li class="reveal" style="--i:2"><a href="/journal/"><Photo src={photos.altar} alt="" sizes="(max-width: 700px) 90vw, 360px" widths={[400, 700]} /><h3>The Journal</h3><p>Shadow work, men’s circles, Huni Kuin voices and more to read.</p></a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ── Hero ── */
+  .hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; overflow: clip; padding-top: calc(var(--header-h) + 3rem); isolation: isolate; }
+  .hero-bg { position: absolute; inset: 0; z-index: -3; }
+  .hero-bg :global(img) { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); animation: settle 2.4s var(--ease) both; }
+  @keyframes settle { from { transform: scale(1.22); filter: brightness(.4); } to { transform: scale(1.08); filter: none; } }
+  .sky { position: absolute; inset: 0; z-index: -2; background:
+      radial-gradient(70% 55% at 50% 100%, rgba(242,100,74,.55), transparent 70%),
+      linear-gradient(180deg, rgba(16,15,36,.82) 0%, rgba(16,15,36,.55) 45%, rgba(16,15,36,.9) 100%); }
+  .hero-sun { position: absolute; right: -14%; bottom: 0; width: min(88vw, 64rem); z-index: -1; transform: translate(0, calc(46% - var(--p, 0) * 14%)); opacity: .95; animation: rise 3.2s var(--ease) 0.2s both; mix-blend-mode: screen; pointer-events: none; }
+  @keyframes rise { from { transform: translate(0, 120%); opacity: 0; } to { transform: translate(0, 46%); opacity: .95; } }
+  @media (max-width: 760px) { .hero-sun { right: -38%; width: 120vw; transform: translate(0, 52%); } @keyframes rise { from { transform: translate(0, 120%); opacity: 0; } to { transform: translate(0, 52%); opacity: .8; } } }
+  @media (max-width: 760px) { .sky { background: radial-gradient(90% 40% at 50% 100%, rgba(242,100,74,.5), transparent 70%), linear-gradient(180deg, rgba(16,15,36,.78), rgba(16,15,36,.74) 50%, rgba(16,15,36,.92)); } }
+  .hero-copy { padding-block: clamp(1rem, 3vh, 3rem) clamp(2rem, 5vh, 3.5rem); position: relative; }
+  .display { margin: 0.3em 0 0.3em; display: grid; }
+  .hero .display { font-size: clamp(2.8rem, 1rem + 6.4vw, 6.6rem); }
+  .display em { font-style: italic; color: var(--sun); font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; }
+  .hero .lede { color: #efe9ff; max-width: 34ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.5rem; }
+  .hero-meta { margin-top: clamp(1.5rem, 4vh, 2.6rem); display: flex; flex-wrap: wrap; gap: 2rem 3.5rem; align-items: center; }
+  .where { display: flex; align-items: center; gap: 0.8rem; margin: 0; line-height: 1.3; font-size: 0.95rem; color: var(--glow); }
+  .where b { color: var(--paper); font-size: 1.05rem; }
+  .hero-strip { background: rgba(16,15,36,.55); backdrop-filter: blur(6px); }
+  .hero-in { opacity: 0; transform: translateY(40px); animation: up 1.1s var(--ease) calc(0.5s + var(--d) * 0.14s) forwards; }
+  .display .hero-in { display: block; }
+  @keyframes up { to { opacity: 1; transform: none; } }
+  :global(html.calm) .hero-in { opacity: 1; transform: none; animation: none; }
+  @media (prefers-reduced-motion: reduce) { .hero-in { opacity: 1; transform: none; animation: none; } .hero-sun { animation: none; } .hero-bg :global(img) { animation: none; } }
+
+  /* ── Manifesto ── */
+  .manifesto { text-align: left; }
+  .fill { font-family: var(--font-display); font-size: clamp(1.9rem, 1.2rem + 3vw, 3.7rem); line-height: 1.12; letter-spacing: -0.01em; margin: 1.2rem 0 2rem; font-variation-settings: 'opsz' 96, 'SOFT' 70, 'WONK' 1; }
+  .fill span { color: rgba(251,243,230,.2); transition: color .5s; }
+  .fill span.lit { color: var(--paper); }
+  :global(html:not(.js)) .fill span { color: var(--paper); }
+
+  /* ── Facts ── */
+  .facts { padding-block: clamp(2.2rem, 5vw, 3.6rem); }
+  .facts .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+  @media (min-width: 880px) { .facts .grid { grid-template-columns: repeat(6, 1fr); } }
+  .fact { text-align: left; }
+  .fact b { font-family: var(--font-display); font-size: clamp(2.4rem, 1.6rem + 3vw, 4.3rem); line-height: 1; font-weight: 650; font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1; font-variant-numeric: tabular-nums; }
+  .fact .plus { font-size: clamp(2.4rem, 1.6rem + 3vw, 4.3rem); }
+  .fact span { display: block; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em; margin-top: 0.4rem; max-width: 14ch; line-height: 1.25; }
+
+  /* ── Head layout ── */
+  .head { display: grid; gap: 1.5rem 4rem; align-items: end; margin-bottom: clamp(2rem, 5vw, 4rem); }
+  @media (min-width: 900px) { .head { grid-template-columns: 1.3fr 1fr; } }
+  .head .lede { margin: 0; }
+
+  /* ── Experience cards ── */
+  .cards { display: flex; gap: 1.2rem; list-style: none; margin: 0; padding: 0.5rem var(--gutter) 2rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--coral) transparent; }
+  @media (min-width: 1200px) { .cards { padding-inline: calc((100vw - var(--max)) / 2); } }
+  .xcard { flex: 0 0 min(78vw, 24rem); scroll-snap-align: start; border-radius: 1.5rem; overflow: hidden; background: var(--ink); color: var(--paper); position: relative; aspect-ratio: 3/4.2; transition: transform .6s var(--ease); }
+  .xcard:hover { transform: translateY(-8px) rotate(-.6deg); }
+  .xcard :global(picture), .xcard :global(img) { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .xcard::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(16,15,36,.92) 8%, rgba(16,15,36,.1) 60%); }
+  .x-body { position: absolute; inset: auto 0 0 0; z-index: 2; padding: 1.5rem; }
+  .x-body h3 { font-size: 1.7rem; margin-bottom: .5rem; }
+  .x-body p { margin: 0; font-size: .95rem; opacity: .92; }
+  .offerings ul { display: flex; flex-wrap: wrap; gap: .6rem; list-style: none; margin: 1rem 0 0; padding: 0; }
+  .offerings li { padding: .45em 1.1em; border: 1.5px solid var(--ink); border-radius: 999px; font-weight: 600; font-size: .9rem; transition: .3s; }
+  .offerings li:hover { background: var(--ink); color: var(--paper); }
+
+  /* ── Explorer ── */
+  .stages { overflow: clip; }
+  .explorer { display: grid; gap: 2rem; margin-top: 3rem; }
+  @media (min-width: 900px) { .explorer { grid-template-columns: 17rem 1fr; gap: 3.5rem; } }
+  .tabs { display: flex; gap: .4rem; overflow-x: auto; padding-bottom: .5rem; scrollbar-width: none; }
+  @media (min-width: 900px) { .tabs { flex-direction: column; overflow: visible; } }
+  .tabs button { display: flex; align-items: baseline; gap: .9rem; text-align: left; background: none; border: 0; border-bottom: 1px solid rgba(255,255,255,.18); color: inherit; padding: .9rem .2rem; cursor: pointer; font: inherit; white-space: nowrap; opacity: .6; transition: .3s var(--ease); }
+  .tabs .n { font-size: .75rem; letter-spacing: .2em; color: var(--sun); }
+  .tabs .t { font-family: var(--font-display); font-size: 1.35rem; font-variation-settings: 'opsz' 36, 'SOFT' 60; }
+  .tabs button:hover { opacity: 1; }
+  .tabs button[aria-selected='true'] { opacity: 1; border-color: var(--sun); transform: translateX(6px); }
+  .panel { display: grid; gap: 1.6rem; animation: fade .6s var(--ease); }
+  .panel[hidden] { display: none; }
+  @media (min-width: 760px) { .panel { grid-template-columns: 1.1fr 1fr; align-items: center; gap: 2.5rem; } }
+  @keyframes fade { from { opacity: 0; transform: translateY(14px); } }
+  .p-img { border-radius: 1.5rem; overflow: hidden; aspect-ratio: 4/5; }
+  .p-img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .p-copy .pill { margin-bottom: 1rem; }
+  .p-copy .h3 { margin-bottom: .8rem; font-size: clamp(2rem, 1.4rem + 2vw, 3.2rem); }
+  .p-copy ul { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: .5rem; }
+  .p-copy li { padding-left: 1.6rem; position: relative; color: var(--glow); font-weight: 600; font-size: .95rem; }
+  .p-copy li::before { content: '✺'; position: absolute; left: 0; color: var(--sun); }
+
+  /* ── The Rising ── */
+  .rising { position: relative; min-height: 90svh; display: grid; align-items: center; overflow: clip; isolation: isolate; padding-block: 6rem; }
+  .rise-bg { position: absolute; inset: -12% 0; z-index: -2; will-change: transform; }
+  .rise-bg :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .rising::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(16,15,36,.9), rgba(16,15,36,.35) 70%), linear-gradient(0deg, rgba(16,15,36,.6), transparent 40%); }
+  .rise-copy { max-width: 46rem; margin-left: max(var(--gutter), calc((100vw - var(--max)) / 2)); width: auto; }
+  .rise-copy .display { margin: .3em 0; color: var(--sun); }
+  blockquote { font-family: var(--font-display); font-size: clamp(1.3rem, 1rem + 1vw, 1.9rem); font-style: italic; margin: 2rem 0 0; padding-left: 1.4rem; border-left: 3px solid var(--coral); max-width: 30ch; line-height: 1.3; }
+
+  /* ── Tickets ── */
+  .tiers { display: grid; gap: 1.1rem; list-style: none; margin: 0 0 2rem; padding: 0; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .tier { display: grid; gap: .3rem; align-content: start; position: relative; transition: transform .5s var(--ease), box-shadow .5s; }
+  .tier:hover { transform: translateY(-6px); }
+  .tier.hot { background: var(--ink); color: var(--paper); }
+  .tier.hot .muted { color: #b9b5d6; }
+  .tier .pill { justify-self: start; margin-bottom: .5rem; }
+  .tier h3 { font-size: 1.5rem; }
+  .tier .price { font-family: var(--font-display); font-size: clamp(3rem, 2rem + 3vw, 4.4rem); line-height: 1; margin: .2rem 0; font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1; }
+  .tier .btn { justify-self: start; margin-top: 1rem; }
+  .tier.hot .btn { --bg: var(--sun); --fg: var(--night); }
+  .tier.side { background: transparent; box-shadow: none; border: 2px dashed var(--ink); }
+  .tix-foot { font-weight: 600; margin-bottom: 1.5rem; }
+
+  /* ── Gallery strip ── */
+  .strip { padding-block: clamp(3rem, 6vw, 5rem); overflow: clip; }
+  .roll { display: flex; gap: 1rem; list-style: none; margin: 0 0 2rem; padding: 0; width: max-content; animation: slide 90s linear infinite; }
+  .roll:hover { animation-play-state: paused; }
+  .roll li { width: clamp(11rem, 18vw, 16rem); aspect-ratio: 3/4; border-radius: 1rem; overflow: hidden; flex: none; }
+  .roll li:nth-child(even) { margin-top: 2.5rem; }
+  .roll :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* ── Home ── */
+  .home .grid { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 900px) { .home .grid { grid-template-columns: 1fr 1.1fr; gap: 5rem; } }
+  .ticks { list-style: none; padding: 0; margin: 1.5rem 0 2rem; display: grid; gap: .6rem; }
+  .ticks li { padding-left: 2rem; position: relative; font-weight: 600; }
+  .ticks li::before { content: ''; position: absolute; left: 0; top: .35em; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: radial-gradient(circle, var(--sun) 35%, var(--coral) 36%); }
+  .imgs { position: relative; padding-bottom: 3rem; }
+  .i1 { border-radius: 2rem 2rem 2rem 8rem; overflow: hidden; aspect-ratio: 4/3.2; }
+  .i1 :global(img), .i2 :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .i2 { position: absolute; right: -4%; bottom: 0; width: 38%; aspect-ratio: 3/4; border-radius: 1.2rem; overflow: hidden; border: 6px solid var(--paper); box-shadow: 0 24px 40px -20px rgba(0,0,0,.5); }
+  .deco { position: absolute; width: 9rem; left: -3rem; top: -3rem; z-index: -1; }
+  @media (max-width: 700px) { .deco { display: none; } }
+
+  /* ── Involve ── */
+  .roles { display: grid; gap: 1rem; list-style: none; padding: 0; margin: 0; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .roles a { display: grid; gap: .6rem; align-content: space-between; min-height: 14rem; padding: 1.6rem; border-radius: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); text-decoration: none; transition: .4s var(--ease); height: 100%; }
+  .roles a:hover { background: var(--paper); color: var(--ink); transform: translateY(-6px); }
+  .roles h3 { font-size: 1.7rem; }
+  .roles p { margin: 0; font-size: .95rem; }
+  .roles span { font-size: 1.6rem; justify-self: end; }
+
+  /* ── Beyond ── */
+  .bgrid { display: grid; gap: 1.5rem; list-style: none; padding: 0; margin: 2.5rem 0 0; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+  .bgrid a { text-decoration: none; display: block; }
+  .bgrid a :global(img) { aspect-ratio: 4/3; object-fit: cover; width: 100%; border-radius: 1.4rem; margin-bottom: 1rem; transition: transform .6s var(--ease), border-radius .6s var(--ease); }
+  .bgrid a:hover :global(img) { transform: scale(1.03) rotate(-.6deg); border-radius: 2.4rem 1.4rem 2.4rem 1.4rem; }
+  .bgrid h3 { font-size: 1.6rem; margin-bottom: .4rem; }
+  .bgrid p { color: var(--muted); margin: 0; }
+</style>
+
+<script>
+  // Hero sun parallax + manifesto fill + counters + stage explorer + parallax
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const calm = () => document.documentElement.classList.contains('calm');
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const sun = document.querySelector<HTMLElement>('[data-sun]');
+  const bg = document.querySelector<HTMLElement>('[data-parallax]');
+  const fill = document.querySelectorAll<HTMLElement>('[data-fill] span');
+  const fillWrap = document.querySelector<HTMLElement>('[data-fill]');
+
+  const onScroll = () => {
+    const y = scrollY, vh = innerHeight;
+    if (hero && sun && !reduce && !calm()) hero.style.setProperty('--p', String(Math.min(1, y / vh)));
+    if (bg && !reduce && !calm()) {
+      const r = bg.parentElement!.getBoundingClientRect();
+      bg.style.transform = `translateY(${(r.top / vh) * -14}%)`;
+    }
+    if (fillWrap) {
+      const r = fillWrap.getBoundingClientRect();
+      const prog = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.35)));
+      const n = Math.round(prog * fill.length);
+      fill.forEach((s, i) => s.classList.toggle('lit', i < n));
+    }
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  // Counters
+  const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+  const run = (el: HTMLElement) => {
+    const to = Number(el.dataset.count);
+    if (reduce || calm() || to === 0) { el.textContent = to.toLocaleString('en-GB'); return; }
+    const t0 = performance.now(), dur = 1600;
+    const step = (t: number) => {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+      el.textContent = Math.round(to * e).toLocaleString('en-GB');
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { run(e.target as HTMLElement); io.unobserve(e.target); } }), { threshold: 0.6 });
+  counters.forEach((c) => { c.textContent = '0'; io.observe(c); });
+
+  // Stage explorer (WAI-ARIA tabs)
+  document.querySelectorAll<HTMLElement>('[data-explorer]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role=tabpanel]')];
+    const select = (i: number, focus = false) => {
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      panels.forEach((p, k) => (p.hidden = k !== i));
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i));
+      t.addEventListener('keydown', (e) => {
+        const k = e.key;
+        if (['ArrowDown', 'ArrowRight'].includes(k)) { e.preventDefault(); select((i + 1) % tabs.length, true); }
+        if (['ArrowUp', 'ArrowLeft'].includes(k)) { e.preventDefault(); select((i - 1 + tabs.length) % tabs.length, true); }
+        if (k === 'Home') { e.preventDefault(); select(0, true); }
+        if (k === 'End') { e.preventDefault(); select(tabs.length - 1, true); }
+      });
+    });
+  });
+</script>

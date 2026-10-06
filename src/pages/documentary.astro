@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+import { photos } from '../data/photos';
+---
+<Base title="Documentary: Freedom" description="Freedom: a spontaneous documentary on Madagascar’s landscapes, resilience and spirit, and the Sunrise Centre’s urgent need for a school bus." newsletter={false}>
+  <PageHero eyebrow="Soul Revolution Media" title="Freedom." lede="A spontaneous film about Madagascar: its landscapes, its people and what it means to be free." image={photos.sunset} alt="" position="50% 55%" />
+  <section class="section">
+    <div class="wrap-narrow">
+      <div class="video">
+        <iframe src="https://www.youtube-nocookie.com/embed/2D_vBEdfZ2M" title="Freedom, a documentary from Madagascar" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+      </div>
+      <div class="prose" style="margin-top:2.5rem">
+        <p>Narrated by Imani, our Culture &amp; Media Director, <em>Freedom</em> is an uplifting, insightful and humbling film, paced to be calming. It follows communities who show resilience and connection, and highlights the Sunrise Centre in Nosy Be: the region’s first school of its kind for disadvantaged children and families.</p>
+        <p><a class="btn" href="/charity/">Support the Sunrise Centre</a> <a class="btn btn-ghost" href={SITE.links.youtube} rel="noopener">More on YouTube</a></p>
+        <h2>Soul Revolution Media</h2>
+        <p>The festival’s media platform is in the works: a conscious streaming home for films, music, books, yoga, meditation and personal-growth courses. Coming soon.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .video { aspect-ratio: 16/9; border-radius: 1.4rem; overflow: hidden; background: var(--night); box-shadow: 0 40px 70px -40px rgba(31,30,61,.7); } iframe { width: 100%; height: 100%; border: 0; }
+</style>

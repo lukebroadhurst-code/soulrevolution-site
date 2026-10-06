@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+---
+<Base title="Vision & Mission" description="Soul Revolution’s vision: remembrance and renewal, not escapism. Our mission: a peaceful movement of lasting impact that ripples into the hearts of the many.">
+  <PageHero eyebrow="About us" title="Not escapism. Remembrance." lede="At a time when disconnection is widespread, we seek a more unified way of living." image={photos.meditation} alt="" position="50% 35%" tone="ink" />
+
+  <section class="section">
+    <div class="wrap two">
+      <div class="prose">
+        <p class="eyebrow">Our vision</p>
+        <h2 class="h2">Face it. Feel it. Grow through it.</h2>
+        <p>Rather than embracing escapism, we promote facing reality directly: truly feeling, sharing and growing together.</p>
+        <p>Our approach is introspective. We meet our fears and flaws with honesty, then evolve through love, gentleness and compassion.</p>
+        <p>Soul Revolution Festival aims to be a space for remembrance and renewal where holistic wellness tools are shared. Addressing physical, emotional and mental wellbeing alongside our connection to nature, each other and spirituality, we strive to nurture wholeness, transformation and unity.</p>
+      </div>
+      <figure><Photo src={photos.comeAsYouAre} alt="A hand-painted sign reading ‘Come as you are’ among flowers and branches" sizes="(max-width:900px) 80vw, 420px" widths={[420, 800]} /></figure>
+    </div>
+  </section>
+
+  <section class="section on-ink grain">
+    <div class="wrap-narrow prose">
+      <p class="eyebrow">Our mission</p>
+      <blockquote class="big">“A peaceful movement of lasting impact that ripples into the hearts of the many.”</blockquote>
+      <p>Our gatherings emphasise inclusivity, safety and welcoming environments where people can express themselves fully, regardless of background or appearance.</p>
+      <p>The festival is the peak of this movement: a weekend where we unite to initiate transformative change. Beyond it, the mission continues through retreats, music events and media projects.</p>
+      <p>We feel called to reshape humanity’s relationship with the planet, from destruction to stewardship. That means:</p>
+      <ul class="ml">
+        <li>Fully experiencing life’s joys and sorrows</li>
+        <li>Restoring lost freedoms</li>
+        <li>Valuing mutual listening</li>
+        <li>Choosing integrity over convenience</li>
+        <li>Transcending our limitations</li>
+        <li>Practising openness and vulnerability with one another</li>
+      </ul>
+      <p><a class="btn btn-sun" href="/values/">Explore our values</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .two { display: grid; gap: 3rem; align-items: center; } @media (min-width: 900px) { .two { grid-template-columns: 1.3fr 1fr; gap: 6rem; } }
+  figure { margin: 0; border-radius: 12rem 12rem 2rem 2rem; overflow: hidden; } figure :global(img) { width: 100%; height: auto; }
+  .big { border: 0; padding: 0; font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); line-height: 1.15; margin: 1rem 0 2rem; font-style: italic; }
+  .ml { display: grid; gap: .5rem; list-style: none; padding: 0; margin: 1.5rem 0 2rem; } .ml li { padding-left: 1.8rem; position: relative; font-weight: 600; } .ml li::before { content: '✺'; position: absolute; left: 0; color: var(--sun); }
+</style>

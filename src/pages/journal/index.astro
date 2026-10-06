@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { getCollection } from 'astro:content';
+import { photos } from '../../data/photos';
+const posts = (await getCollection('journal')).sort((a, b) => +b.data.date - +a.data.date);
+const read = (body = '') => Math.max(1, Math.round(body.split(/\s+/).length / 220));
+---
+<Base title="Journal" description="Essays on shadow work, men’s circles, yoga, Huni Kuin voices, British spirituality and music, from the Soul Revolution community.">
+  <PageHero eyebrow="Journal" title="Words for the road within." lede="Essays and explorations from the world of Soul Revolution." image={photos.meditation} alt="" position="50% 30%" tone="ink" />
+  <section class="section">
+    <div class="wrap">
+      <ul class="posts">
+        {posts.map((p, i) => (
+          <li class="reveal" style={`--i:${i % 3}`}>
+            <a href={`/journal/${p.id}/`}>
+              <span class="cat">{p.data.category}</span>
+              <h2 class="h3">{p.data.title}</h2>
+              <p>{p.data.description}</p>
+              <span class="meta">{p.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} · {read(p.body)} min read</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .posts { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+  .posts a { display: grid; gap: .8rem; align-content: start; height: 100%; text-decoration: none; background: #fff; border-radius: 1.5rem; padding: 1.8rem; transition: .5s var(--ease); border: 2px solid transparent; }
+  .posts a:hover { transform: translateY(-6px) rotate(-.4deg); border-color: var(--coral); box-shadow: 0 30px 50px -34px rgba(31,30,61,.6); }
+  .cat { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: var(--coral-ink); }
+  .posts p { margin: 0; color: var(--muted); font-size: .98rem; } .meta { font-size: .82rem; font-weight: 600; color: var(--muted); }
+</style>

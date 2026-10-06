@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import TicketCalc from '../components/TicketCalc.astro';
+import Photo from '../components/Photo.astro';
+import { SITE, TICKETS, PAYMENT_PLAN_MONTHS } from '../data/site';
+import { photos } from '../data/photos';
+
+const faq = [
+  ['Can I pay in instalments?', `Yes. Payment plans run over ${PAYMENT_PLAN_MONTHS[0]} to ${PAYMENT_PLAN_MONTHS.at(-1)} months through Klarna or GoCardless, depending on how far away the festival is when you book.`],
+  ['Is there a refund policy?', 'Tickets are non-refundable except where the law requires, or if the date or venue materially changes. Tickets can be transferred to another person (not resold).'],
+  ['Does my ticket cover everything?', 'Your ticket covers entry to the whole festival, including the free stages, Connection workshops, the Healing Village area and the children’s tent. Soul Temple experiences, parking, live-in vehicles, the Sacred Self Sauna, camping extras and food are separate.'],
+];
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
+---
+<Base title="Tickets" description={`Soul Revolution Festival 2027 tickets from £255. Build your ticket, see your total and spread the cost over 3–8 months. ${SITE.dateShort}, Weston Park.`} jsonLd={faqLd}>
+  <PageHero eyebrow="Tickets · 2027" title="Your place in the circle." lede="Build your ticket below to see exactly what you’ll pay, then book securely through Dandelion." image={photos.crowdCircle} alt="" position="50% 40%" />
+
+  <section class="section">
+    <div class="wrap">
+      <TicketCalc />
+    </div>
+  </section>
+
+  <section class="section-tight on-sand" id="fair">
+    <div class="wrap fair">
+      <div>
+        <p class="eyebrow">Making it work</p>
+        <h2 class="h2">Nobody should miss out because of money.</h2>
+      </div>
+      <div class="cols">
+        <article class="card">
+          <h3>Payment plans</h3>
+          <p>Spread your ticket across {PAYMENT_PLAN_MONTHS[0]} to {PAYMENT_PLAN_MONTHS.at(-1)} monthly payments with Klarna or GoCardless.</p>
+        </article>
+        <article class="card">
+          <h3>Community Care</h3>
+          <p>A subsidised ticket via a simple application, funded by community generosity. Apply through the form on Dandelion, or <a href={`mailto:${SITE.emails.support}`}>email the team</a>.</p>
+        </article>
+        <article class="card">
+          <h3>Pay It Forward</h3>
+          <p>Add a £20 Pay It Forward ticket to fund a place for someone who could not otherwise come.</p>
+        </article>
+        <article class="card">
+          <h3>Access</h3>
+          <p>Disabled guests get 15% off and a free carer ticket (with proof). <a href="/plan/#access">See access details</a>.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section stay" id="stay">
+    <div class="wrap grid">
+      <div class="img"><Photo src={photos.poshBells} alt="Bell tents glamping at the festival" sizes="(max-width:900px) 90vw, 520px" widths={[500, 800]} /></div>
+      <div>
+        <p class="eyebrow">Where you’ll sleep</p>
+        <h2 class="h2">Camp, glamp, or arrive to a pitched tent.</h2>
+        <p>Bring your own, or travel lighter. Beds are booked separately from your festival ticket.</p>
+        <ul class="opts">
+          <li><b>Self-pitch camping</b> Bring your tent and pitch where you like on the campsite.</li>
+          <li><b>Pre-pitched tents</b> Budget tents waiting for you, through Camplight.</li>
+          <li><b>Glamping</b> Fully set-up bell tents with Posh Bells and Karma Canvas.</li>
+          <li><b>Live-in vehicle</b> £60 pass for campervans and motorhomes.</li>
+        </ul>
+        <a class="btn" href={SITE.links.glamping} rel="noopener">Book glamping</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight on-ink">
+    <div class="wrap-narrow">
+      <h2 class="h2">Good to know</h2>
+      <dl class="qa">
+        {faq.map(([q, a]) => (<div><dt>{q}</dt><dd>{a}</dd></div>))}
+      </dl>
+      <p><a class="link-arrow" href="/important-information-faqs/">All FAQs</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .fair { display: grid; gap: 2rem; }
+  @media (min-width: 960px) { .fair { grid-template-columns: 1fr 1.6fr; gap: 4rem; } }
+  .cols { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .cols h3 { font-size: 1.4rem; margin-bottom: .6rem; }
+  .cols p { margin: 0; font-size: .95rem; }
+  .cols a { color: var(--coral-ink); font-weight: 700; }
+  .stay .grid { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 900px) { .stay .grid { grid-template-columns: 1fr 1fr; gap: 5rem; } }
+  .img { border-radius: 2rem; overflow: hidden; } .img :global(img) { width: 100%; height: auto; }
+  .opts { list-style: none; padding: 0; margin: 1.5rem 0 2rem; display: grid; gap: .8rem; }
+  .opts li { padding-left: 1.4rem; border-left: 3px solid var(--sun); }
+  .opts b { display: block; font-family: var(--font-display); font-size: 1.2rem; }
+  .qa { display: grid; gap: 1.5rem; margin: 2rem 0; }
+  dt { font-family: var(--font-display); font-size: 1.35rem; margin-bottom: .3rem; }
+  dd { margin: 0; color: #cfcbe8; }
+</style>

@@ -1,0 +1,148 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Newsletter from '../components/Newsletter.astro';
+import { SITE } from '../data/site';
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2?url';
+import hankenLatin from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  newsletter?: boolean | 'coral' | 'night' | 'paper';
+  jsonLd?: object | object[];
+  publishedTime?: string;
+}
+const {
+  title,
+  description = SITE.description,
+  image = '/og.jpg',
+  type = 'website',
+  noindex = false,
+  newsletter = true,
+  jsonLd,
+  publishedTime,
+} = Astro.props;
+
+const fullTitle = title ? (title.length > 34 ? title : `${title} · ${SITE.name}`) : `${SITE.name} 2027 · ${SITE.dateShort} · Weston Park`;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogImage = new URL(image, SITE.url).href;
+
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  logo: `${SITE.url}/favicon.svg`,
+  email: SITE.emails.general,
+  sameAs: [SITE.links.instagram, SITE.links.facebook, SITE.links.youtube],
+};
+const graph = [org, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#100f24" />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={hankenLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      try { if (localStorage.getItem('sr-calm') === '1') document.documentElement.classList.add('calm'); } catch (e) {}
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    {newsletter && <Newsletter tone={newsletter === true ? 'coral' : newsletter} />}
+    <Footer />
+
+    <button class="totop" type="button" aria-label="Back to top" data-totop>
+      <svg viewBox="0 0 44 44" aria-hidden="true">
+        <circle cx="22" cy="22" r="19" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="3" />
+        <circle class="ring" cx="22" cy="22" r="19" fill="none" stroke="var(--sun)" stroke-width="3" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" transform="rotate(-90 22 22)" />
+        <path d="M22 28V16m0 0l-5 5m5-5l5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <style is:global>
+      .totop { position: fixed; right: 1rem; bottom: 1rem; z-index: 80; width: 3.2rem; height: 3.2rem; padding: 0; border: 0; border-radius: 50%; background: var(--night); cursor: pointer; opacity: 0; transform: translateY(16px) scale(.9); pointer-events: none; transition: .4s var(--ease); box-shadow: 0 10px 30px -8px rgba(0,0,0,.5); }
+      .totop.on { opacity: 1; transform: none; pointer-events: auto; }
+      .totop:hover { background: var(--ink); }
+      .totop .ring { transition: stroke-dashoffset .15s linear; }
+    </style>
+
+    <script>
+      // Scroll reveal
+      const els = document.querySelectorAll<HTMLElement>('.reveal');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        els.forEach((el) => io.observe(el));
+      } else els.forEach((el) => el.classList.add('in'));
+
+      // Progress ring / back to top
+      const btn = document.querySelector<HTMLButtonElement>('[data-totop]')!;
+      const ring = btn.querySelector<SVGCircleElement>('.ring')!;
+      const upd = () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        const p = max > 0 ? scrollY / max : 0;
+        ring.style.strokeDashoffset = String(100 - p * 100);
+        btn.classList.toggle('on', scrollY > 900);
+      };
+      addEventListener('scroll', upd, { passive: true }); upd();
+      btn.addEventListener('click', () => scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+
+      // Calm mode (user-controlled reduced motion)
+      const calmBtn = document.querySelector<HTMLButtonElement>('[data-calm]');
+      const root = document.documentElement;
+      const paint = () => {
+        const on = root.classList.contains('calm');
+        calmBtn?.setAttribute('aria-pressed', String(on));
+        const s = calmBtn?.querySelector('span'); if (s) s.textContent = on ? 'on' : 'off';
+      };
+      paint();
+      calmBtn?.addEventListener('click', () => {
+        root.classList.toggle('calm');
+        try { localStorage.setItem('sr-calm', root.classList.contains('calm') ? '1' : '0'); } catch {}
+        paint();
+      });
+    </script>
+  </body>
+</html>

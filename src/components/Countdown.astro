@@ -1,0 +1,34 @@
+---
+import { SITE } from '../data/site';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<div class:list={['cd', cls]} data-countdown={SITE.start} role="timer" aria-label={`Time until ${SITE.name} opens`}>
+  <div><b data-d>--</b><span>days</span></div>
+  <div><b data-h>--</b><span>hours</span></div>
+  <div><b data-m>--</b><span>mins</span></div>
+  <div><b data-s>--</b><span>secs</span></div>
+</div>
+<style>
+  .cd { display: inline-grid; grid-template-columns: repeat(4, auto); gap: clamp(0.8rem, 2.4vw, 1.8rem); }
+  .cd div { text-align: center; min-width: 3.4rem; }
+  .cd b { display: block; font-family: var(--font-display); font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3.2rem); font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; font-variation-settings: 'opsz' 96, 'SOFT' 60; }
+  .cd span { display: block; margin-top: 0.4rem; font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.75; }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((el) => {
+    const t = new Date(el.dataset.countdown!).getTime();
+    const q = (s: string) => el.querySelector<HTMLElement>(s)!;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const tick = () => {
+      let ms = Math.max(0, t - Date.now());
+      const d = Math.floor(ms / 864e5); ms -= d * 864e5;
+      const h = Math.floor(ms / 36e5); ms -= h * 36e5;
+      const m = Math.floor(ms / 6e4); ms -= m * 6e4;
+      const s = Math.floor(ms / 1e3);
+      q('[data-d]').textContent = String(d); q('[data-h]').textContent = pad(h);
+      q('[data-m]').textContent = pad(m); q('[data-s]').textContent = pad(s);
+    };
+    tick(); setInterval(tick, 1000);
+  });
+</script>

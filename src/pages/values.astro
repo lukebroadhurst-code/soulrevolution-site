@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { VALUES, REALIGN_STEPS } from '../data/site';
+const n = VALUES.length;
+const pos = VALUES.map((_, i) => { const a = (i / n) * Math.PI * 2 - Math.PI / 2; return { x: 50 + Math.cos(a) * 41, y: 50 + Math.sin(a) * 41 }; });
+---
+<Base title="Our Values" description="Seven values guide Soul Revolution: integrity, compassion, service, bravery, humility, responsibility and discipline, and a five-step way back to centre.">
+  <PageHero eyebrow="About us" title="Seven rays, one Source." lede="Rooted in devotion to a higher power (God, Source, Spirit) and in living from the highest part of ourselves, the Soul." tone="ink" />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="orbit-wrap">
+        <div class="orbit" data-orbit>
+          <svg class="rays" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="41" fill="none" stroke="#1f1e3d" stroke-opacity=".15" stroke-dasharray="1 2.4" />
+            {pos.map((p) => <line x1="50" y1="50" x2={p.x} y2={p.y} stroke="#f2644a" stroke-width=".5" stroke-opacity=".5" />)}
+          </svg>
+          <div class="core" aria-live="polite">
+            <span class="k" data-k>Integrity</span>
+            <p data-t>{VALUES[0].text}</p>
+          </div>
+          {VALUES.map((v, i) => (
+            <button type="button" class:list={['node', i === 0 && 'on']} style={`left:${pos[i].x}%;top:${pos[i].y}%`} data-i={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+              <span>{v.name}</span>
+            </button>
+          ))}
+        </div>
+        <ol class="plain-list prose">
+          {VALUES.map((v) => (<li><b>{v.name}.</b> {v.text}</li>))}
+        </ol>
+      </div>
+      <p class="muted center">Tap a ray to explore each value.</p>
+    </div>
+  </section>
+
+  <section class="section on-night grain">
+    <div class="wrap">
+      <p class="eyebrow">When we fall short</p>
+      <h2 class="h2">A five-step way back to centre.</h2>
+      <p class="lede">Ego tendencies like victimhood, escapism, arrogance, greed and control are universal. We see them as invitations to learn and realign, not failures.</p>
+      <ol class="steps">
+        {REALIGN_STEPS.map(([t, d], i) => (<li class="reveal" style={`--i:${i}`}><span>{i + 1}</span><h3>{t}</h3><p>{d}</p></li>))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap-narrow prose">
+      <h2 class="h2">How values become a festival.</h2>
+      <p>Every workshop, performance and interaction is infused with compassion, designed to serve and uplift. Mindful curation of speakers, inclusive programming and sustainable practices put integrity and responsibility into every decision.</p>
+      <p>The aim is an environment of humility and discipline where people feel safe to explore, grow and connect, not just with each other but with deeper parts of themselves.</p>
+      <p><a href="/sustainability/">See how we practise responsibility →</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .orbit-wrap { display: grid; gap: 3rem; justify-items: center; }
+  .orbit { position: relative; width: min(100%, 36rem); aspect-ratio: 1; margin-inline: auto; }
+  .rays { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .core { position: absolute; inset: 24%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe4a8, #ffb347 55%, #f2644a); display: grid; place-content: center; text-align: center; padding: 1.2rem; border: 3px solid var(--ink); box-shadow: 0 30px 60px -24px rgba(242,100,74,.7); }
+  .core .k { font-family: var(--font-display); font-size: clamp(1.4rem, 1rem + 2vw, 2.4rem); font-weight: 700; color: var(--ink); font-variation-settings: 'opsz' 72, 'SOFT' 80, 'WONK' 1; }
+  .core p { margin: .4rem 0 0; font-size: clamp(.72rem, .55rem + .5vw, .95rem); line-height: 1.3; color: var(--ink); font-weight: 500; }
+  .node { position: absolute; transform: translate(-50%, -50%); background: var(--paper); border: 2px solid var(--ink); color: var(--ink); border-radius: 999px; padding: .55em 1em; font: 700 clamp(.7rem, .55rem + .5vw, .92rem) var(--font-body); cursor: pointer; transition: .35s var(--ease); white-space: nowrap; }
+  .node:hover { background: var(--sun); } .node.on { background: var(--ink); color: var(--paper); transform: translate(-50%, -50%) scale(1.12); }
+  .plain-list { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 700px) { .core { inset: 18%; } .node { padding: .45em .7em; } }
+  .center { text-align: center; margin-top: 1.5rem; }
+  .steps { list-style: none; padding: 0; margin: 3rem 0 0; display: grid; gap: 1rem; counter-reset: s; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .steps li { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); border-radius: 1.4rem; padding: 1.5rem; }
+  .steps span { display: grid; place-content: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--sun); color: var(--night); font-family: var(--font-display); font-weight: 700; margin-bottom: 1rem; }
+  .steps h3 { font-size: 1.4rem; margin-bottom: .4rem; } .steps p { margin: 0; font-size: .95rem; color: #cfcbe8; }
+</style>
+<script>
+  import { VALUES } from '../data/site';
+  const nodes = [...document.querySelectorAll<HTMLButtonElement>('.node')];
+  const k = document.querySelector('[data-k]')!, t = document.querySelector('[data-t]')!;
+  const sel = (i: number) => {
+    nodes.forEach((n, j) => { n.classList.toggle('on', i === j); n.setAttribute('aria-pressed', String(i === j)); });
+    k.textContent = VALUES[i].name; t.textContent = VALUES[i].text;
+  };
+  nodes.forEach((n, i) => { n.addEventListener('click', () => sel(i)); n.addEventListener('mouseenter', () => matchMedia('(hover:hover)').matches && sel(i)); });
+</script>

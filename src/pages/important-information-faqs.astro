@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { FAQS, FAQ_GROUPS, SITE } from '../data/site';
+import { photos } from '../data/photos';
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+---
+<Base title="FAQs & important information" description="Answers about tickets, getting to Weston Park, camping, families, access, rules and welfare at Soul Revolution Festival 2027." jsonLd={ld} newsletter={false}>
+  <PageHero eyebrow="Important information" title="Your questions, answered." lede="Search, or browse by topic. Can’t find it? We’d love to help." image={photos.guitarist} alt="" position="50% 25%" />
+
+  <section class="section">
+    <div class="wrap-narrow">
+      <div class="tools">
+        <label class="sr-only" for="q">Search the FAQs</label>
+        <input id="q" type="search" placeholder="Search: dogs, camping, kids, refund…" autocomplete="off" data-q />
+        <div class="chips" role="group" aria-label="Filter by topic">
+          <button type="button" class="chip on" data-group="all" aria-pressed="true">All</button>
+          {FAQ_GROUPS.map((g) => (<button type="button" class="chip" data-group={g} aria-pressed="false">{g}</button>))}
+        </div>
+      </div>
+      <p class="count" aria-live="polite" data-count></p>
+
+      <div class="list" data-list>
+        {FAQS.map((f) => (
+          <details class="item" data-group={f.group} data-text={(f.q + ' ' + f.a).toLowerCase()}>
+            <summary><span class="g">{f.group}</span><span class="q">{f.q}</span><i aria-hidden="true"></i></summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+      <p class="none" hidden data-none>No matches. Try another word, or <a href={`mailto:${SITE.emails.general}`}>email us</a>.</p>
+
+      <div class="contact card">
+        <h2 class="h3">Still curious?</h2>
+        <p>Write to <a href={`mailto:${SITE.emails.support}`}>{SITE.emails.support}</a> for ticket support, or <a href={`mailto:${SITE.emails.general}`}>{SITE.emails.general}</a> for anything else.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tools { position: sticky; top: var(--header-h); background: var(--paper); z-index: 10; padding-block: 1rem; margin-bottom: 1rem; }
+  .chips { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .9rem; }
+  .chip { border: 1.5px solid var(--ink); background: transparent; border-radius: 999px; padding: .4em 1em; font: 600 .85rem var(--font-body); cursor: pointer; color: var(--ink); transition: .25s; }
+  .chip:hover, .chip.on { background: var(--ink); color: var(--paper); }
+  .count { font-size: .85rem; color: var(--muted); margin: 0 0 1rem; min-height: 1.4em; }
+  .list { display: grid; gap: .6rem; }
+  .item { background: #fff; border-radius: 1.1rem; padding: 0 1.3rem; box-shadow: 0 1px 0 rgba(31,30,61,.06); transition: box-shadow .3s; }
+  .item[open] { box-shadow: 0 20px 40px -26px rgba(31,30,61,.5); border-left: 4px solid var(--coral); }
+  .item[hidden] { display: none; }
+  summary { list-style: none; display: grid; grid-template-columns: 1fr auto; gap: .1rem 1rem; align-items: center; padding: 1.1rem 0; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  .g { grid-column: 1; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--coral-ink); font-weight: 700; }
+  .q { grid-column: 1; font-family: var(--font-display); font-size: 1.25rem; line-height: 1.25; font-variation-settings: 'opsz' 36, 'SOFT' 50; font-weight: 600; }
+  summary i { grid-column: 2; grid-row: 1 / span 2; width: 1.6rem; height: 1.6rem; position: relative; }
+  summary i::before, summary i::after { content: ''; position: absolute; left: 50%; top: 50%; width: 1rem; height: 2px; background: var(--ink); transition: transform .4s var(--ease); transform: translate(-50%, -50%); }
+  summary i::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .item[open] summary i::after { transform: translate(-50%, -50%) rotate(0); }
+  .item p { margin: 0 0 1.3rem; max-width: 60ch; }
+  .none { text-align: center; padding: 2rem; font-weight: 600; }
+  .contact { margin-top: 3rem; background: var(--sand); box-shadow: none; } .contact p { margin: 0; } .contact a { color: var(--coral-ink); font-weight: 700; }
+  mark { background: var(--glow); color: inherit; border-radius: .2em; padding: 0 .1em; }
+</style>
+
+<script>
+  const q = document.querySelector<HTMLInputElement>('[data-q]')!;
+  const items = [...document.querySelectorAll<HTMLDetailsElement>('.item')];
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
+  const count = document.querySelector<HTMLElement>('[data-count]')!;
+  const none = document.querySelector<HTMLElement>('[data-none]')!;
+  let group = 'all';
+  const apply = () => {
+    const term = q.value.trim().toLowerCase();
+    let n = 0;
+    items.forEach((it) => {
+      const ok = (group === 'all' || it.dataset.group === group) && (!term || it.dataset.text!.includes(term));
+      it.hidden = !ok; if (ok) n++;
+      if (term && ok) it.open = true;
+    });
+    count.textContent = term || group !== 'all' ? `${n} answer${n === 1 ? '' : 's'}` : '';
+    none.hidden = n > 0;
+  };
+  q.addEventListener('input', apply);
+  chips.forEach((c) => c.addEventListener('click', () => {
+    group = c.dataset.group!;
+    chips.forEach((x) => { x.classList.toggle('on', x === c); x.setAttribute('aria-pressed', String(x === c)); });
+    apply();
+  }));
+  // Deep-link: #question opens
+  if (location.hash) document.querySelector<HTMLDetailsElement>(location.hash)?.setAttribute('open', '');
+</script>

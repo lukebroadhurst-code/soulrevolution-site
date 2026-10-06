@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+import { photos } from '../data/photos';
+const roles = [
+  { id: 'volunteers', t: 'Volunteers', d: 'Around 300 volunteers help the village run, from the gates to the kitchens to the welfare tent.', s: 'Open', url: SITE.links.volunteers, cta: 'Apply to volunteer' },
+  { id: 'music', t: 'Music artists', d: 'Bring your sound to our stages. Artists and genres from across the globe.', s: `Closes ${SITE.applicationDeadline}`, url: SITE.links.musicArtists, cta: 'Apply to perform' },
+  { id: 'facilitators', t: 'Facilitators', d: 'Hold a workshop, circle, ceremony, movement session or talk.', s: `Closes ${SITE.applicationDeadline}`, url: SITE.links.facilitators, cta: 'Apply to facilitate' },
+  { id: 'traders', t: 'Food & non-food traders', d: 'Around 30 hand-picked traders, with a focus on local, seasonal and responsibly sourced.', s: 'Forms opening early October', url: `mailto:${SITE.emails.general}?subject=Trader%20application%202027`, cta: 'Ask about trading' },
+  { id: 'healers', t: 'Healing Village practitioners', d: 'Around 25 practitioners offer massage, reiki, cold-water therapy and more.', s: 'Forms opening early October', url: `mailto:${SITE.emails.general}?subject=Healing%20Village%202027`, cta: 'Ask about the village' },
+];
+---
+<Base title="Get involved" description="Volunteer, perform, facilitate, trade or heal at Soul Revolution Festival 2027. Applications for music artists and facilitators close 11 November 2026." newsletter="night">
+  <PageHero eyebrow="Participate" title="Many hands, one village." lede="The festival is made by hundreds of people sharing their gifts. Find your place." image={photos.firewalk} alt="" position="50% 40%" />
+  <section class="section">
+    <div class="wrap">
+      <ul class="roles">
+        {roles.map((r, i) => (
+          <li class="card reveal" id={r.id} style={`--i:${i % 3}`}>
+            <span class="pill teal">{r.s}</span>
+            <h2 class="h3">{r.t}</h2>
+            <p>{r.d}</p>
+            <a class="btn btn-sm" href={r.url} rel="noopener">{r.cta}</a>
+          </li>
+        ))}
+      </ul>
+      <p class="note">Some categories fill up fast. If you find one is full, tell us and we’ll let you know when next year’s forms open. Questions? <a href={`mailto:${SITE.emails.general}`}>{SITE.emails.general}</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .roles { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
+  .roles .card { display: grid; gap: .8rem; align-content: start; scroll-margin-top: 7rem; } .roles .pill { justify-self: start; } .roles p { margin: 0; } .roles .btn { justify-self: start; margin-top: .4rem; }
+  .note { margin-top: 3rem; } .note a { color: var(--coral-ink); font-weight: 700; }
+</style>

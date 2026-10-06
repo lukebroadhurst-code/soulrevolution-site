@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { RETREATS } from '../data/site';
+import { photos } from '../data/photos';
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+---
+<Base title="Retreats & intimate events" description="Soul Revolution gatherings all year: a Samhain day retreat in Shropshire, a four-day Soul Constellations retreat in Staffordshire, and live storytelling.">
+  <PageHero eyebrow="Beyond the festival" title="The revolution continues, in smaller circles." lede="The festival is the peak of a movement that carries on through retreats, intimate events and media projects all year." image={photos.altar} alt="" position="50% 35%" tone="ink" />
+  <section class="section">
+    <div class="wrap">
+      <ol class="events">
+        {RETREATS.map((r) => (
+          <li class="reveal" data-date={r.date}>
+            <time datetime={r.date} class="when"><b>{new Date(r.date).getDate()}</b><span>{new Date(r.date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</span></time>
+            <div class="body">
+              <h2 class="h3">{r.name}</h2>
+              <p class="meta">{r.when} · {r.where}</p>
+              <p>{r.what}</p>
+              <a class="btn btn-sm book" href={r.url} rel="noopener">Book on Dandelion</a><span class="pill line gone" hidden>This one has passed</span>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>
+<style>
+  .events { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.5rem; }
+  .events li { display: grid; gap: 1.2rem; padding: clamp(1.4rem, 3vw, 2.4rem); border-radius: 1.6rem; background: #fff; box-shadow: 0 24px 48px -34px rgba(31,30,61,.5); }
+  @media (min-width: 700px) { .events li { grid-template-columns: 9rem 1fr; gap: 2.5rem; align-items: start; } }
+  .when { display: grid; place-content: center; text-align: center; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe4a8, #ffb347 55%, #f2644a); border: 3px solid var(--ink); max-width: 9rem; width: 100%; }
+  .when b { font-family: var(--font-display); font-size: 3rem; line-height: 1; } .when span { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .past .when { filter: grayscale(.8); opacity: .7; }
+  .meta { color: var(--coral-ink); font-weight: 700; margin: .3rem 0 1rem; }
+</style>
+<script>
+  // Mark events that have already happened (page is static, so this runs in the browser)
+  document.querySelectorAll<HTMLElement>('[data-date]').forEach((li) => {
+    if (new Date(li.dataset.date! + 'T23:59:59') < new Date()) {
+      li.classList.add('past');
+      li.querySelector('.book')?.setAttribute('hidden', '');
+      li.querySelector('.gone')?.removeAttribute('hidden');
+    }
+  });
+</script>
