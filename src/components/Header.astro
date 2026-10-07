@@ -93,23 +93,25 @@ const right = NAV.slice(3);
   .site-header {
     position: fixed; inset: 0 0 auto 0; z-index: 100; height: var(--header-h);
     color: var(--paper);
-    background: linear-gradient(180deg, rgba(16,15,36,.72), rgba(16,15,36,0));
-    transition: background 0.4s var(--ease), backdrop-filter 0.4s, box-shadow 0.4s, transform 0.5s var(--ease);
+    transition: transform 0.45s var(--ease);
+    will-change: transform;
   }
-  .site-header.stuck {
-    background: color-mix(in srgb, var(--night) 86%, transparent);
-    backdrop-filter: blur(14px) saturate(1.3);
-    box-shadow: 0 1px 0 rgba(255,255,255,.07);
-  }
-  .site-header.hide { transform: translateY(-100%); }
+  /* Two stacked backdrops cross-fade with opacity. (A gradient can't animate into a solid colour,
+     which is what made the old header snap and flash.) */
+  .site-header::before, .site-header::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; transition: opacity 0.35s var(--ease); }
+  .site-header::before { background: linear-gradient(180deg, rgba(20,19,46,.72), rgba(20,19,46,0)); }
+  .site-header::after { background: color-mix(in srgb, var(--night) 88%, transparent); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); box-shadow: 0 1px 0 rgba(255,255,255,.07); opacity: 0; }
+  .site-header.stuck::before { opacity: 0; }
+  .site-header.stuck::after { opacity: 1; }
+  .site-header.hide { transform: translateY(calc(-100% - 2.5rem)); }
   .bar { display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; height: 100%; gap: clamp(.6rem, 2vw, 2rem); position: relative; }
   .brand { display: block; width: clamp(6.6rem, 9vw, 8.4rem); color: var(--paper); transition: opacity .3s; }
   .brand:hover { opacity: .85; }
   .desk.left ul { justify-content: flex-end; }
-  .medallion { display: block; width: clamp(5rem, 6.4vw, 6.6rem); margin-top: .9rem; align-self: start; position: relative; z-index: 2; filter: drop-shadow(0 10px 18px rgba(0,0,0,.55)); transition: transform .8s var(--ease), width .5s var(--ease), margin .5s var(--ease); }
-  .medallion:hover { transform: rotate(-4deg) scale(1.05); }
+  .medallion { display: block; width: clamp(5rem, 6.4vw, 6.6rem); margin-top: .9rem; align-self: start; position: relative; z-index: 2; filter: drop-shadow(0 10px 18px rgba(0,0,0,.55)); transform-origin: 50% 0; transition: transform .5s var(--ease); }
+  .site-header.stuck .medallion { transform: scale(.78); }
+  .medallion:hover, .site-header.stuck .medallion:hover { transform: rotate(-4deg) scale(1.05); }
   .medallion img { width: 100%; height: auto; }
-  .site-header.stuck .medallion { width: clamp(3.6rem, 4.4vw, 4.6rem); margin-top: .35rem; }
 
   .desk ul { display: flex; gap: clamp(0.8rem, 1.6vw, 2rem); list-style: none; margin: 0; padding: 0; align-items: center; }
   .desk a, .desk button {
@@ -160,7 +162,7 @@ const right = NAV.slice(3);
   .menu[hidden] { display: none; }
   .menu ul { list-style: none; margin: 0; padding: 0; }
   .menu-inner { padding-bottom: 3rem; }
-  .menu .big a { display: block; font-family: var(--font-display); font-size: clamp(2.1rem, 8vw, 3.4rem); font-weight: 600; text-decoration: none; padding: 0.3rem 0; }
+  .menu .big a { display: block; font-family: var(--font-display); font-size: clamp(2.1rem, 8vw, 3.4rem); font-weight: 400; text-decoration: none; padding: 0.3rem 0; }
   .menu .group { margin: 1.1rem 0; }
   .group-label { font-size: 0.72rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--sun); font-weight: 700; }
   .menu .group ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0.2rem 1rem; margin-top: 0.4rem; }
@@ -175,18 +177,43 @@ const right = NAV.slice(3);
   const burger = document.querySelector<HTMLButtonElement>('[data-burger]')!;
   const menu = document.querySelector<HTMLElement>('[data-menu]')!;
 
-  let last = 0;
-  const onScroll = () => {
-    const y = window.scrollY;
-    header.classList.toggle('stuck', y > 24);
-    // tuck away when scrolling down past the fold, return on scroll up
-    const menuOpen = burger.getAttribute('aria-expanded') === 'true';
-    header.classList.toggle('hide', !menuOpen && y > 700 && y > last + 6);
-    if (y < last - 6 || y < 700) header.classList.remove('hide');
-    last = y;
+  // Hide on scroll down, reveal on scroll up. Movement is accumulated per direction (with hysteresis)
+  // and applied once per frame, so trackpad inertia and tiny deltas can't make it flicker.
+  const root = document.documentElement;
+  const HIDE_AFTER = 160;   // never hide near the top of the page
+  const DOWN_TRIGGER = 70;  // px of sustained downward scroll before hiding
+  const UP_TRIGGER = 28;    // px of upward scroll before it returns
+  let lastY = scrollY, acc = 0, hidden = false, queued = false;
+
+  const setHidden = (v: boolean) => {
+    if (v === hidden) return;
+    hidden = v;
+    header.classList.toggle('hide', v);
+    root.classList.toggle('hdr-hide', v);   // lets sticky sub-bars slide up into the freed space
   };
-  onScroll();
+  const update = () => {
+    queued = false;
+    const y = Math.max(0, scrollY);
+    const dy = y - lastY;
+    lastY = y;
+    header.classList.toggle('stuck', y > 24 || burger.getAttribute('aria-expanded') === 'true');
+
+    const menuOpen = burger.getAttribute('aria-expanded') === 'true';
+    const calm = root.classList.contains('calm') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const busy = menuOpen || calm || header.matches(':focus-within') || !!header.querySelector('.has-sub.open');
+    if (busy || y < HIDE_AFTER) { setHidden(false); acc = 0; return; }
+
+    if (dy === 0) return;
+    if (Math.sign(dy) !== Math.sign(acc)) acc = 0;   // direction changed: start counting again
+    acc += dy;
+    if (!hidden && acc > DOWN_TRIGGER) setHidden(true);
+    else if (hidden && acc < -UP_TRIGGER) setHidden(false);
+  };
+  const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+  update();
   addEventListener('scroll', onScroll, { passive: true });
+  // keyboard users tabbing into the header should always find it visible
+  header.addEventListener('focusin', () => setHidden(false));
 
   const setMenu = (open: boolean) => {
     burger.setAttribute('aria-expanded', String(open));
@@ -194,6 +221,7 @@ const right = NAV.slice(3);
     menu.hidden = !open;
     document.documentElement.style.overflow = open ? 'hidden' : '';
     header.classList.toggle('stuck', open || scrollY > 24);
+    if (open) setHidden(false);
   };
   burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
   menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });

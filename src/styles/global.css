@@ -31,7 +31,9 @@
   --radius: 1.25rem;
   --ease: cubic-bezier(0.22, 0.8, 0.2, 1);
   --header-h: 4.75rem;
+  --stick-top: var(--header-h);   /* where sticky sub-bars sit; 0 while the header is tucked away */
 }
+html.hdr-hide { --stick-top: 0px; }
 
 *,
 *::before,
